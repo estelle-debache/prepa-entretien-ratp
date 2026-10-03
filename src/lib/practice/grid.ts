@@ -13,12 +13,15 @@ export function richTextToPlain(text: RichText): string {
   }).join('').replace(/\*\*/g, '').replace(/\*/g, '').trim()
 }
 
-export function buildGrid(question: Question): GridItem[] {
+export function buildGrid(question: Question, perspective: 'self' | 'ami' = 'self'): GridItem[] {
   const ideas = question.ideas.map((idea, i) => ({ id: `${question.id}-idea-${i + 1}`, kind: 'idea' as const, label: richTextToPlain(idea) }))
   const avoid = question.kind === 'top' ? richTextToPlain(question.avoid).split(';').map((label, i) => ({
     id: `${question.id}-avoid-${i + 1}`, kind: 'avoid' as const, label: label.trim(),
   })).filter((item) => item.label) : []
-  const general = GENERAL_GRID_LABELS.map((label, i) => ({ id: `${question.id}-general-${i + 1}`, kind: 'general' as const, label }))
+  const labels = perspective === 'ami' ? [
+    'Il a donné un exemple vécu', 'Il a parlé calmement, sans réciter', 'Il a respecté la durée',
+  ] : GENERAL_GRID_LABELS
+  const general = labels.map((label, i) => ({ id: `${question.id}-general-${i + 1}`, kind: 'general' as const, label }))
   return [...ideas, ...avoid, ...general]
 }
 

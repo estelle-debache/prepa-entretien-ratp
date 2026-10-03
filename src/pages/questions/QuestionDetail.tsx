@@ -3,16 +3,22 @@ import { Link, useNavigate, useParams } from 'react-router'
 import { ChevronLeft, ChevronRight, Clock, Mic, PencilLine, Star, X } from 'lucide-react'
 import { getQuestion, QUESTIONS } from '../../content'
 import type { Profile, RichText as RichTextValue, Question } from '../../content/types'
+import { PROFILE_FIELDS } from '../../content/profileFields'
 import { missingFields } from '../../lib/content/personalize'
 import { Button, Card } from '../../ui/primitives'
 import { RichText, QuotedRichText } from '../../ui/RichText'
 import { useProfile, useStatutQuestions } from '../../ui/hooks'
-import { formatTargetSeconds } from '../../ui/format'
+import { formatTargetSeconds, frenchNbsp } from '../../ui/format'
 
 type Stage = { key: string; label: string }
 
+/** Remonte le composant à chaque changement de question, pour réinitialiser la révélation. */
 export default function QuestionDetail() {
   const { id = '' } = useParams()
+  return <QuestionDetailInner key={id} id={id} />
+}
+
+function QuestionDetailInner({ id }: { id: string }) {
   const navigate = useNavigate()
   const [profile] = useProfile()
   const [statutQuestions, setStatutQuestions] = useStatutQuestions()
@@ -79,10 +85,20 @@ export default function QuestionDetail() {
       {missing.length > 0 && (
         <Card className="!border-amber-100 !bg-amber-50 !p-4">
           <p className="flex items-center gap-1.5 text-sm font-bold text-amber-800"><PencilLine aria-hidden="true" className="size-4" /> Complète ta fiche pour personnaliser</p>
-          <ul className="mt-1.5 list-disc space-y-0.5 pl-5 text-sm text-amber-800">
-            {missing.map((field) => <li key={field}>{field}</li>)}
-          </ul>
-          <Link to="/fiche" className="mt-2 inline-block text-sm font-bold text-amber-800 underline">Aller à ma fiche</Link>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {missing.map((field) => {
+              const label = PROFILE_FIELDS.find((f) => f.id === field)?.label ?? field
+              return (
+                <Link
+                  key={field}
+                  to="/fiche"
+                  className="inline-flex min-h-8 items-center rounded-full border border-dashed border-amber-500 bg-white px-2.5 text-sm font-semibold text-amber-800"
+                >
+                  {label}
+                </Link>
+              )
+            })}
+          </div>
         </Card>
       )}
 
@@ -155,7 +171,7 @@ export default function QuestionDetail() {
 
 function StageContent({ question, stageKey, profile }: { question: Question; stageKey: string; profile: Profile }) {
   if (stageKey === 'checks' && question.kind === 'top') {
-    return <p className="text-[17px] leading-relaxed text-ink-900">{question.checks}</p>
+    return <p className="text-[17px] leading-relaxed text-ink-900">{frenchNbsp(question.checks)}</p>
   }
   if (stageKey === 'ideas') {
     return (

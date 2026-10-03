@@ -7,6 +7,7 @@ import { pickQuiz, scoreQuiz } from './quiz'
 import { buildSimulation, summarizeSimulation } from './simulation'
 import { checkOrder, REFLEX_NOTE, shuffledReflexes } from './reflex'
 import type { Question } from '../../content/types'
+import { friendModeInstructions, simulationIntro } from '../../content/practice/simulationIntro'
 
 describe('practice pure helpers', () => {
   it('counts local calendar days and names the plan day', () => {
@@ -48,5 +49,24 @@ describe('practice pure helpers', () => {
     expect(shuffledReflexes(mulberry32(1))).toHaveLength(5)
     expect(checkOrder(['Sécuriser', 'Alerter', 'Informer', 'Appliquer la consigne', 'Rendre compte'])).toEqual({ correct: true, positions: [true, true, true, true, true] })
     expect(REFLEX_NOTE).toContain('ne mettre personne en danger')
+  })
+  it('builds a fixed eight-step short simulation across seeds', () => {
+    for (const seed of [1, 7, 42, 2026]) {
+      const steps = buildSimulation({ length: 'courte', statuses: { Q3: 'a-revoir', Q13: 'a-revoir' }, rng: mulberry32(seed) })
+      expect(steps).toHaveLength(8)
+      expect(steps[0]).toEqual({ kind: 'question', questionId: 'Q1' })
+      expect(steps.at(-1)).toEqual({ kind: 'recruteur' })
+      expect(steps.filter((step) => step.kind === 'situation')).toHaveLength(1)
+      const finalOralIds = steps.filter((step) => step.kind === 'question' && ['Q9', 'Q13'].includes(step.questionId)).map((step) => step.kind === 'question' ? step.questionId : '')
+      expect(finalOralIds).toHaveLength(1)
+    }
+  })
+  it('uses friend perspective labels and personalized intros with empty-name fallback', () => {
+    const q = { id: 'Q1', kind: 'top', star: true, theme: 'presentation', question: '', checks: '', ideas: [['Exemple']], example: [], avoid: ['Réciter'], targetSeconds: [1, 2] } as unknown as Question
+    expect(buildGrid(q, 'ami').slice(-3).map((item) => item.label)).toEqual([
+      'Il a donné un exemple vécu', 'Il a parlé calmement, sans réciter', 'Il a respecté la durée',
+    ])
+    expect(simulationIntro('')).toContain('Yahia, réponds')
+    expect(friendModeInstructions('Lina')).toContain('Lina répond')
   })
 })

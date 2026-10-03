@@ -3,6 +3,7 @@ import { CheckCircle2, Clipboard, ClipboardPaste, Lock, Trash2, TriangleAlert, V
 import { exportAll, importAll, clearAll } from '../lib/store'
 import { Button, Callout, Card, Switch } from '../ui/primitives'
 import { useReglages } from '../ui/hooks'
+import { frenchNbsp } from '../ui/format'
 
 export default function Donnees() {
   const [reglages, setReglages] = useReglages()
@@ -128,7 +129,7 @@ export default function Donnees() {
           </Button>
         ) : (
           <div className="space-y-2 rounded-xl border border-coral-100 bg-coral-50 p-3">
-            <p className="flex items-center gap-1.5 text-sm font-bold text-coral-700"><TriangleAlert aria-hidden="true" className="size-4" /> Confirmer l'effacement ?</p>
+            <p className="flex items-center gap-1.5 text-sm font-bold text-coral-700"><TriangleAlert aria-hidden="true" className="size-4" /> {frenchNbsp("Confirmer l'effacement ?")}</p>
             <div className="flex gap-2">
               <Button variant="danger" onClick={eraseAll} className="flex-1">Oui, effacer</Button>
               <Button variant="ghost" onClick={() => setConfirmErase(false)} className="flex-1">Annuler</Button>

@@ -72,3 +72,20 @@ export function formatPercent(value: number): string {
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value))
 }
+
+/** Majuscule sur la première lettre seulement (« salarié déclaré » → « Salarié déclaré »). */
+export function capitalizeFirst(text: string): string {
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : text
+}
+
+/**
+ * Typographie française : espace insécable après « et avant », et avant : ; ! ?
+ * pour éviter qu'un guillemet ou une ponctuation se retrouve seul en début/fin de ligne.
+ * Idempotent (peut être appliqué plusieurs fois sans effet de bord).
+ */
+export function frenchNbsp(text: string): string {
+  return text
+    .replace(/«\s/g, '«\u00a0')
+    .replace(/\s»/g, '\u00a0»')
+    .replace(/\s([?!:;])/g, '\u00a0$1')
+}

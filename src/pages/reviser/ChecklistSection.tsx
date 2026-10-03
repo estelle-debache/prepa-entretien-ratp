@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react'
 import { CHECKLIST } from '../../content'
 import type { Profile } from '../../content/types'
+import { toPlainText } from '../../lib/content/personalize'
 import { Card, ProgressBar } from '../../ui/primitives'
 import { RichText } from '../../ui/RichText'
 import { useChecklistState } from '../../ui/hooks'
@@ -32,6 +33,7 @@ export function ChecklistSection({ profile }: { profile: Profile }) {
                     type="button"
                     role="checkbox"
                     aria-checked={checked}
+                    aria-label={toPlainText(item.text, profile)}
                     onClick={() => setChecklist({ ...checklist, [item.id]: !checked })}
                     className="flex min-h-12 w-full items-center gap-3 px-4 py-2.5 text-left"
                   >

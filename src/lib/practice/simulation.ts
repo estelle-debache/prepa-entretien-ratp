@@ -32,15 +32,27 @@ export function buildSimulation({ length, statuses = {}, rng = Math.random }: {
   const choose = (candidates: Question[], count: number) => prioritize(candidates, statuses, rng).slice(0, count).map((q) => ({ kind: 'question' as const, questionId: q.id }))
   const bankPick = (themes: ThemeId[], count: number) => choose(banks.filter((q) => themes.includes(q.theme)), count)
   const situationPool = prioritize(SITUATIONS, statuses, rng).sort((a, b) => Number(!['S1', 'S2', 'S3'].includes(a.id)) - Number(!['S1', 'S2', 'S3'].includes(b.id)))
-  const situationCount = length === 'courte' ? 1 : 2
+  if (length === 'courte') {
+    return [
+      { kind: 'question', questionId: 'Q1' },
+      ...choose(pick(['Q2', 'Q3']), 1),
+      ...choose(pick(['Q4', 'Q8']), 1),
+      ...choose(pick(['Q6', 'Q7']), 1),
+      ...choose(pick(['Q9', 'Q13']), 1),
+      ...situationPool.slice(0, 1).map((s) => ({ kind: 'situation' as const, situationId: s.id })),
+      ...choose(pick(['Q14', 'Q15']), 1),
+      { kind: 'recruteur' },
+    ]
+  }
+  const situationCount = 2
   const steps: SimulationStep[] = [
     { kind: 'question', questionId: 'Q1' },
     ...choose(pick(['Q2', 'Q3']), 2),
     ...choose(pick(['Q4', 'Q8']), 1), ...choose(pick(['Q5']), 1),
     ...choose(pick(['Q6', 'Q7']), 2), ...choose(pick(['Q9', 'Q13']), 1),
-    ...bankPick(['metier', 'securite', 'contraintes'], length === 'courte' ? 1 : 2),
+    ...bankPick(['metier', 'securite', 'contraintes'], 2),
     ...situationPool.slice(0, situationCount).map((s) => ({ kind: 'situation' as const, situationId: s.id })),
-    ...choose(pick(['Q12']), 1), ...bankPick(['culture', 'pieges'], length === 'courte' ? 0 : 1),
+    ...choose(pick(['Q12']), 1), ...bankPick(['culture', 'pieges'], 1),
     ...choose(pick(['Q14', 'Q15']), 2), { kind: 'recruteur' },
   ]
   return steps

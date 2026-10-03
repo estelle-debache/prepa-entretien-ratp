@@ -4,7 +4,7 @@ import { PLAN, TOP_QUESTIONS, QUESTIONS } from '../content'
 import type { PlanDay, PlanTask } from '../content/types'
 import { Card, Disclosure, ProgressBar } from '../ui/primitives'
 import { usePlan, useProfile, useReglages, useStatutQuestions, profileCompletion } from '../ui/hooks'
-import { clamp, countdownLabel, formatPercent, planDayLabel } from '../ui/format'
+import { clamp, countdownLabel, formatPercent, frenchNbsp, planDayLabel } from '../ui/format'
 
 function TaskRow({ task, done, onToggle }: { task: PlanTask; done: boolean; onToggle: () => void }) {
   return (
@@ -13,6 +13,7 @@ function TaskRow({ task, done, onToggle }: { task: PlanTask; done: boolean; onTo
         type="button"
         role="checkbox"
         aria-checked={done}
+        aria-label={task.text}
         onClick={onToggle}
         className={`flex size-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
           done ? 'border-mint-500 bg-mint-500 text-white' : 'border-navy-200 bg-white text-transparent'
@@ -20,7 +21,7 @@ function TaskRow({ task, done, onToggle }: { task: PlanTask; done: boolean; onTo
       >
         <Check aria-hidden="true" className="size-4" strokeWidth={3} />
       </button>
-      <span className={`flex-1 text-[15px] leading-snug ${done ? 'text-ink-400 line-through' : 'text-ink-900'}`}>{task.text}</span>
+      <span className={`flex-1 text-[15px] leading-snug ${done ? 'text-ink-400 line-through' : 'text-ink-900'}`}>{frenchNbsp(task.text)}</span>
       {task.link ? (
         <Link to={task.link} className="flex min-h-11 min-w-11 items-center justify-center text-navy-500 hover:text-navy-900" aria-label={`Ouvrir : ${task.text}`}>
           <ChevronRight aria-hidden="true" className="size-5" />

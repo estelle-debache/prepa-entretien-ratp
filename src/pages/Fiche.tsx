@@ -4,15 +4,21 @@ import type { ProfileField } from '../content/types'
 import { Card, Disclosure, ProgressBar, SelectButtons, YesNoToggle } from '../ui/primitives'
 import { profileCompletion, useFlash, useProfile } from '../ui/hooks'
 
-function FieldControl({ field, value, onChange }: { field: ProfileField; value: string; onChange: (value: string) => void }) {
+/**
+ * `yesno`/`select` sont des groupes de boutons (pas de contrôle natif unique) : on les relie au
+ * libellé via `aria-labelledby` plutôt qu'un `<label>` qui les engloberait (VoiceOver n'associerait
+ * alors qu'un seul des boutons). `text`/`textarea`/`date` utilisent un `<label htmlFor>` classique.
+ */
+function FieldControl({ field, value, onChange, labelId }: { field: ProfileField; value: string; onChange: (value: string) => void; labelId: string }) {
   switch (field.type) {
     case 'yesno':
-      return <YesNoToggle value={value} onChange={onChange} name={field.label} />
+      return <YesNoToggle value={value} onChange={onChange} labelledBy={labelId} />
     case 'select':
-      return <SelectButtons options={field.options ?? []} value={value} onChange={onChange} />
+      return <SelectButtons options={field.options ?? []} value={value} onChange={onChange} labelledBy={labelId} />
     case 'textarea':
       return (
         <textarea
+          id={field.id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
@@ -23,6 +29,7 @@ function FieldControl({ field, value, onChange }: { field: ProfileField; value: 
     case 'date':
       return (
         <input
+          id={field.id}
           type="date"
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -32,6 +39,7 @@ function FieldControl({ field, value, onChange }: { field: ProfileField; value: 
     default:
       return (
         <input
+          id={field.id}
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -91,13 +99,20 @@ export default function Fiche() {
             >
               {group.intro ? <p className="mb-3 text-sm text-ink-600">{group.intro}</p> : null}
               <div className="space-y-4">
-                {fields.map((field) => (
-                  <label key={field.id} className="block space-y-1.5">
-                    <span className="block text-[15px] font-semibold text-navy-900">{field.label}</span>
-                    {field.help ? <span className="block text-sm text-ink-400">{field.help}</span> : null}
-                    <FieldControl field={field} value={profile[field.id] ?? field.defaultValue ?? ''} onChange={(v) => update(field.id, v)} />
-                  </label>
-                ))}
+                {fields.map((field) => {
+                  const labelId = `${field.id}-label`
+                  const isGroup = field.type === 'yesno' || field.type === 'select'
+                  const Heading = isGroup ? 'span' : 'label'
+                  return (
+                    <div key={field.id} className="space-y-1.5">
+                      <Heading id={isGroup ? labelId : undefined} htmlFor={isGroup ? undefined : field.id} className="block text-[15px] font-semibold text-navy-900">
+                        {field.label}
+                      </Heading>
+                      {field.help ? <span className="block text-sm text-ink-400">{field.help}</span> : null}
+                      <FieldControl field={field} value={profile[field.id] ?? field.defaultValue ?? ''} onChange={(v) => update(field.id, v)} labelId={labelId} />
+                    </div>
+                  )
+                })}
               </div>
             </Disclosure>
           )

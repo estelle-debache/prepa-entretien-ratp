@@ -1,7 +1,12 @@
 let activeUtterances: SpeechSynthesisUtterance[] = []
+let generation = 0
 
 export function isTtsSupported(): boolean {
   return typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined'
+}
+
+export function primeVoices(): void {
+  try { if (isTtsSupported()) window.speechSynthesis.getVoices() } catch { /* browser API may fail */ }
 }
 
 export function getFrenchVoice(): Promise<SpeechSynthesisVoice | null> {
@@ -47,10 +52,20 @@ function splitForSpeech(text: string): string[] {
 
 /** Appelez speak depuis un geste utilisateur (ex. clic/tap) : Safari peut bloquer l'audio sinon. */
 export function speak(text: string, options: { rate?: number; onEnd?: () => void } = {}): { cancel(): void } {
-  let cancelled = false
+  const myGen = ++generation
+  let ended = false
+  const endOnce = () => {
+    if (ended) return
+    ended = true
+    try { options.onEnd?.() } catch { /* ignore consumer callback */ }
+  }
   try {
-    if (!isTtsSupported()) { options.onEnd?.(); return { cancel() {} } }
-    stopSpeaking()
+    if (!isTtsSupported()) { endOnce(); return { cancel() {} } }
+    const synth = window.speechSynthesis
+    const mustWaitAfterCancel = synth.speaking || synth.pending
+    if (mustWaitAfterCancel) {
+      try { synth.cancel() } catch { /* browser API may fail */ }
+    }
     const chunks = splitForSpeech(text)
     activeUtterances = chunks.map((chunk) => {
       const utterance = new SpeechSynthesisUtterance(chunk)
@@ -61,20 +76,22 @@ export function speak(text: string, options: { rate?: number; onEnd?: () => void
     const utterances = activeUtterances
     let index = 0
     const queue = () => {
-      if (cancelled || index >= utterances.length) {
+      if (myGen !== generation) { endOnce(); return }
+      if (index >= utterances.length) {
         activeUtterances = []
-        if (!cancelled) { try { options.onEnd?.() } catch { /* ignore consumer callback */ } }
+        endOnce()
         return
       }
       const utterance = utterances[index++]
       utterance.onend = queue
       utterance.onerror = queue
       try { utterance.voice = chooseVoiceNow() } catch { /* use fr-FR language fallback */ }
-      try { window.speechSynthesis.speak(utterance) } catch { queue() }
+      try { synth.speak(utterance) } catch { queue() }
     }
-    queue()
-  } catch { try { options.onEnd?.() } catch { /* no unhandled exceptions */ } }
-  return { cancel() { cancelled = true; stopSpeaking() } }
+    if (mustWaitAfterCancel) window.setTimeout(queue, 150)
+    else queue()
+  } catch { endOnce() }
+  return { cancel() { if (myGen === generation) stopSpeaking() } }
 }
 
 function chooseVoiceNow(): SpeechSynthesisVoice | null {
@@ -85,6 +102,7 @@ function chooseVoiceNow(): SpeechSynthesisVoice | null {
 }
 
 export function stopSpeaking(): void {
+  generation++
   try { if (isTtsSupported()) window.speechSynthesis.cancel() } catch { /* browser API may fail */ }
   activeUtterances = []
 }

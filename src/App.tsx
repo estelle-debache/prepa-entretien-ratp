@@ -4,8 +4,6 @@ import Home from './pages/Home'
 import Fiche from './pages/Fiche'
 import Memo from './pages/Memo'
 import Donnees from './pages/Donnees'
-import Entrainement from './pages/Entrainement'
-import ComingSoon from './pages/ComingSoon'
 import NotFound from './pages/NotFound'
 import ReviserList from './pages/reviser/ReviserList'
 import ReviserSection from './pages/reviser/ReviserSection'
@@ -13,7 +11,14 @@ import QuestionsList from './pages/questions/QuestionsList'
 import QuestionDetail from './pages/questions/QuestionDetail'
 import SituationsList from './pages/situations/SituationsList'
 import SituationDetail from './pages/situations/SituationDetail'
+import ReflexOrder from './pages/situations/ReflexOrder'
 import RolePlayPage from './pages/roleplay/RolePlayPage'
+import Hub from './pages/entrainement/Hub'
+import Oral from './pages/entrainement/Oral'
+import Ami from './pages/entrainement/Ami'
+import Simulation from './pages/simulation/Simulation'
+import Quiz from './pages/quiz/Quiz'
+import RevisionRapide from './pages/RevisionRapide'
 
 function App() {
   return (
@@ -31,14 +36,14 @@ function App() {
         <Route path="/memo" element={<Memo />} />
         <Route path="/donnees" element={<Donnees />} />
 
-        <Route path="/entrainement" element={<Entrainement />} />
-        <Route path="/entrainement/oral/:id" element={<ComingSoon title="Entraînement à l'oral" />} />
-        <Route path="/entrainement/ami/:id" element={<ComingSoon title="Mode ami" />} />
-        <Route path="/simulation" element={<ComingSoon title="Simulation d'entretien" />} />
-        <Route path="/quiz" element={<ComingSoon title="Quiz" />} />
-        <Route path="/revision-rapide" element={<ComingSoon title="Révision rapide" />} />
+        <Route path="/entrainement" element={<Hub />} />
+        <Route path="/entrainement/oral/:id" element={<Oral />} />
+        <Route path="/entrainement/ami/:id" element={<Ami />} />
+        <Route path="/simulation" element={<Simulation />} />
+        <Route path="/quiz" element={<Quiz />} />
+        <Route path="/revision-rapide" element={<RevisionRapide />} />
 
-        <Route path="/situations/ordre" element={<ComingSoon title="Mises en situation — exercice des réflexes" />} />
+        <Route path="/situations/ordre" element={<ReflexOrder />} />
         <Route path="/situations" element={<SituationsList />} />
         <Route path="/situations/:id" element={<SituationDetail />} />
         <Route path="/jeux-de-role/:id" element={<RolePlayPage />} />

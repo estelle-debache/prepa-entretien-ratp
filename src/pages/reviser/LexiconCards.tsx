@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { RotateCcw } from 'lucide-react'
 import { LEXICON } from '../../content'
+import { frenchNbsp } from '../../ui/format'
 
 export function LexiconCards() {
   const [flipped, setFlipped] = useState<Set<string>>(new Set())
@@ -35,7 +36,7 @@ export function LexiconCards() {
                   <span className="mt-1.5 text-[11px] font-medium text-ink-400">Toucher pour voir</span>
                 </div>
                 <div className="flip-card-face flip-card-face-back flex size-full flex-col items-center justify-center gap-1.5 rounded-2xl bg-navy-900 p-3 text-center text-white">
-                  <span className="text-[13px] leading-snug">{entry.definition}</span>
+                  <span className="text-[13px] leading-snug">{frenchNbsp(entry.definition)}</span>
                   <RotateCcw aria-hidden="true" className="size-3.5 text-mint-300" />
                 </div>
               </div>

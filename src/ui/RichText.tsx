@@ -3,10 +3,11 @@ import { Link } from 'react-router'
 import { ArrowRight, PencilLine } from 'lucide-react'
 import { parseInline, resolveRichText, type Resolved } from '../lib/content/personalize'
 import type { Profile, RichText as RichTextValue } from '../content/types'
+import { frenchNbsp } from './format'
 
 /** Rend une portion de texte brut avec **gras** / *italique*, en coupant proprement les sauts de ligne. */
 function InlineText({ text }: { text: string }) {
-  const lines = text.split('\n')
+  const lines = frenchNbsp(text).split('\n')
   return (
     <>
       {lines.map((line, i) => (

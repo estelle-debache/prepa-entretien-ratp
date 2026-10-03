@@ -1,5 +1,6 @@
 import { RECRUITER_QUESTIONS } from '../../content'
 import { Card } from '../../ui/primitives'
+import { frenchNbsp } from '../../ui/format'
 
 export function RecruiterQuestions() {
   return (
@@ -12,9 +13,9 @@ export function RecruiterQuestions() {
               {i + 1}
             </span>
             <div>
-              <p className="text-[16px] leading-relaxed text-ink-900">{question.text}</p>
+              <p className="text-[16px] leading-relaxed text-ink-900">{frenchNbsp(question.text)}</p>
               {question.condition ? (
-                <p className="mt-1 text-sm italic text-ink-400">({question.condition})</p>
+                <p className="mt-1 text-sm italic text-ink-400">({frenchNbsp(question.condition)})</p>
               ) : null}
             </div>
           </Card>

@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import { MISTAKES } from '../../content'
 import { Card } from '../../ui/primitives'
+import { frenchNbsp } from '../../ui/format'
 
 export function MistakesList() {
   return (
@@ -13,8 +14,8 @@ export function MistakesList() {
               <X className="size-4" strokeWidth={2.5} />
             </span>
             <div>
-              <p className="text-[15px] font-bold text-navy-900">{mistake.title}</p>
-              <p className="mt-0.5 text-[16px] leading-relaxed text-ink-900">{mistake.text}</p>
+              <p className="text-[15px] font-bold text-navy-900">{frenchNbsp(mistake.title)}</p>
+              <p className="mt-0.5 text-[16px] leading-relaxed text-ink-900">{frenchNbsp(mistake.text)}</p>
             </div>
           </Card>
         ))}

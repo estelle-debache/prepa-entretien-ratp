@@ -57,12 +57,15 @@ export function useRecorder(): RecorderResult {
   }, [release, revoke])
   const stop = useCallback(() => {
     const recorder = recorderRef.current
-    if (!recorder) return
+    if (!recorder) {
+      if (state === 'requesting') discardRef.current = true
+      return
+    }
     try {
       if (recorder.state === 'recording') recorder.stop()
       else release()
     } catch { release(); setState('error'); setError("L'enregistrement a échoué. Réessaie ou utilise l'app Dictaphone.") }
-  }, [release])
+  }, [release, state])
   const start = useCallback(async () => {
     reset()
     if (!isRecordingSupported()) { setState('error'); setError(FALLBACK_ERROR); return }
@@ -70,6 +73,12 @@ export function useRecorder(): RecorderResult {
     setState('requesting')
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      if (discardRef.current) {
+        stream.getTracks().forEach((track) => track.stop())
+        discardRef.current = false
+        setState('idle')
+        return
+      }
       streamRef.current = stream
       const candidates = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', '']
       let recorder: MediaRecorder | null = null
@@ -104,6 +113,11 @@ export function useRecorder(): RecorderResult {
       setState('recording')
     } catch (e) { release(); setState('error'); setError(errorMessage(e)) }
   }, [release, reset, revoke])
-  useEffect(() => () => { discardRef.current = true; try { if (recorderRef.current?.state === 'recording') recorderRef.current.stop() } catch { /* ignore */ } release(); if (urlRef.current) URL.revokeObjectURL(urlRef.current) }, [release])
+  useEffect(() => () => {
+    discardRef.current = true
+    try { if (recorderRef.current?.state === 'recording') recorderRef.current.stop() } catch { /* ignore */ }
+    release()
+    if (urlRef.current) URL.revokeObjectURL(urlRef.current)
+  }, [release])
   return { state, start, stop, reset, audioUrl, durationMs, error }
 }

@@ -5,7 +5,8 @@ const rootPaths = new Set(['/', '/reviser', '/questions', '/entrainement', '/fic
 
 function getParentPath(pathname: string): string | null {
   if (rootPaths.has(pathname)) return null
-  if (pathname === '/memo' || pathname === '/donnees' || pathname === '/simulation' || pathname === '/quiz' || pathname === '/revision-rapide') return '/'
+  if (pathname === '/memo' || pathname === '/donnees') return '/'
+  if (pathname === '/simulation' || pathname === '/quiz' || pathname === '/revision-rapide') return '/entrainement'
   if (/^\/reviser\/.+/.test(pathname)) return '/reviser'
   if (/^\/questions\/.+/.test(pathname)) return '/questions'
   if (/^\/situations/.test(pathname)) return pathname === '/situations' ? '/entrainement' : '/situations'
@@ -27,13 +28,13 @@ export function TopBar() {
         {parent ? (
           <Link
             to={parent}
-            className="flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full pl-1 pr-2 text-sm font-semibold text-white/90 hover:bg-white/10"
+            className="flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full pl-1 pr-2 text-sm font-semibold text-white hover:bg-white/10"
           >
             <ArrowLeft aria-hidden="true" className="size-5" />
             <span className="sr-only">Retour</span>
           </Link>
         ) : (
-          <Link to="/" className="flex min-h-11 items-center gap-1.5 rounded-full pr-2 text-[15px] font-extrabold tracking-tight">
+          <Link to="/" className="flex min-h-11 items-center gap-1.5 rounded-full pr-2 text-[15px] font-extrabold tracking-tight text-white">
             <RouteIcon aria-hidden="true" className="size-5 text-mint-400" />
             Prépa entretien
           </Link>
@@ -42,14 +43,14 @@ export function TopBar() {
           <Link
             to="/memo"
             aria-label="Mémo"
-            className={`flex min-h-11 min-w-11 items-center justify-center rounded-full hover:bg-white/10 ${pathname === '/memo' ? 'bg-white/15' : ''}`}
+            className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-white hover:bg-white/10 ${pathname === '/memo' ? 'bg-white/15' : ''}`}
           >
             <FileText aria-hidden="true" className="size-5" />
           </Link>
           <Link
             to="/donnees"
             aria-label="Tes données"
-            className={`flex min-h-11 min-w-11 items-center justify-center rounded-full hover:bg-white/10 ${pathname === '/donnees' ? 'bg-white/15' : ''}`}
+            className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-white hover:bg-white/10 ${pathname === '/donnees' ? 'bg-white/15' : ''}`}
           >
             <ShieldCheck aria-hidden="true" className="size-5" />
           </Link>

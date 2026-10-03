@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react'
 import { useId, useState } from 'react'
 import { ChevronDown, Star } from 'lucide-react'
+import { capitalizeFirst } from './format'
 
 /* ------------------------------------------------------------------ */
 /* Bouton                                                              */
@@ -129,11 +130,13 @@ export function ProgressBar({ value, max, colorClassName = 'bg-mint-500', trackC
 /* Bascule Oui/Non et sélecteurs                                       */
 /* ------------------------------------------------------------------ */
 
-export function YesNoToggle({ value, onChange, name }: { value?: string; onChange: (v: string) => void; name: string }) {
+export function YesNoToggle({
+  value, onChange, name, labelledBy,
+}: { value?: string; onChange: (v: string) => void; name?: string; labelledBy?: string }) {
   const isYes = value?.toLowerCase() === 'oui'
   const isNo = value?.toLowerCase() === 'non'
   return (
-    <div className="flex gap-2" role="group" aria-label={name}>
+    <div className="flex gap-2" role="group" aria-label={labelledBy ? undefined : name} aria-labelledby={labelledBy}>
       <button type="button" aria-pressed={isYes} onClick={() => onChange('Oui')}
         className={`min-h-11 flex-1 rounded-xl border-2 text-[15px] font-semibold transition-colors ${isYes ? 'border-mint-500 bg-mint-50 text-mint-700' : 'border-navy-100 bg-white text-navy-600'}`}>
         Oui
@@ -146,15 +149,17 @@ export function YesNoToggle({ value, onChange, name }: { value?: string; onChang
   )
 }
 
-export function SelectButtons({ options, value, onChange }: { options: string[]; value?: string; onChange: (v: string) => void }) {
+export function SelectButtons({
+  options, value, onChange, name, labelledBy,
+}: { options: string[]; value?: string; onChange: (v: string) => void; name?: string; labelledBy?: string }) {
   return (
-    <div className="flex flex-wrap gap-2" role="group">
+    <div className="flex flex-wrap gap-2" role="group" aria-label={labelledBy ? undefined : name} aria-labelledby={labelledBy}>
       {options.map((option) => {
         const active = value === option
         return (
           <button key={option} type="button" aria-pressed={active} onClick={() => onChange(option)}
-            className={`min-h-11 rounded-xl border-2 px-3.5 text-[15px] font-medium capitalize transition-colors ${active ? 'border-mint-500 bg-mint-50 text-mint-700' : 'border-navy-100 bg-white text-navy-600'}`}>
-            {option}
+            className={`min-h-11 rounded-xl border-2 px-3.5 text-[15px] font-medium transition-colors ${active ? 'border-mint-500 bg-mint-50 text-mint-700' : 'border-navy-100 bg-white text-navy-600'}`}>
+            {capitalizeFirst(option)}
           </button>
         )
       })}
@@ -206,7 +211,7 @@ export function Disclosure({
         <ChevronDown aria-hidden="true" className={`size-5 shrink-0 text-navy-500 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
       <div id={id} className={`disclosure-body ${open ? 'is-open' : ''}`}>
-        <div>
+        <div inert={!open}>
           <div className="px-4 pb-4">{children}</div>
         </div>
       </div>

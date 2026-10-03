@@ -90,9 +90,9 @@ button, input, select, textarea { font-family: inherit; }
 
 input, select, textarea { font-size: 16px; touch-action: manipulation; }
 
-button { touch-action: manipulation; }
+a, button { touch-action: manipulation; }
 
-a { color: var(--color-mint-700); }
+a { color: inherit; text-decoration: none; }
 
 :focus-visible {
   outline: 2.5px solid var(--color-mint-500);
