@@ -99,7 +99,10 @@ input, select, textarea { font-size: 16px; touch-action: manipulation; }
 
 a, button { touch-action: manipulation; }
 
-a { color: inherit; text-decoration: none; }
+/* Dans @layer base : sinon cette règle hors couche l'emporte sur les utilitaires Tailwind (text-white…). */
+@layer base {
+  a { color: inherit; text-decoration: none; }
+}
 
 :focus-visible {
   outline: 2.5px solid var(--color-mint-500);
