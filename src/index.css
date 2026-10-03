@@ -7,23 +7,30 @@
   --color-navy-700: #1b4482;
   --color-navy-600: #2a5398;
   --color-navy-500: #3f68ad;
+  --color-navy-300: #9fb3dc;
   --color-navy-200: #c7d3e8;
   --color-navy-100: #e3e9f3;
   --color-navy-50: #f2f5fb;
 
+  --color-mint-900: #012e28;
+  --color-mint-800: #014f44;
   --color-mint-700: #016a5b;
   --color-mint-600: #018572;
   --color-mint-500: #00a88f;
   --color-mint-400: #2ac3a9;
+  --color-mint-300: #5fe0c0;
+  --color-mint-200: #a7e8d6;
   --color-mint-100: #d6f3ec;
   --color-mint-50: #eefbf7;
 
+  --color-amber-800: #6b4600;
   --color-amber-700: #8a5a00;
   --color-amber-600: #b8780a;
   --color-amber-500: #f0ab15;
   --color-amber-100: #fdecc4;
   --color-amber-50: #fff8e8;
 
+  --color-coral-800: #7a2d0d;
   --color-coral-700: #9a3a12;
   --color-coral-600: #c2511c;
   --color-coral-500: #e2672b;

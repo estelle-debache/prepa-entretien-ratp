@@ -131,7 +131,7 @@ function SituationDetailInner({ id }: { id: string }) {
             <button
               type="button"
               onClick={() => setOralOpen(true)}
-              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border-2 border-dashed border-mint-300 text-[15px] font-semibold text-mint-700"
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border-2 border-dashed border-mint-500 text-[15px] font-semibold text-mint-700"
             >
               <Mic aria-hidden="true" className="size-4" /> Répondre à l'oral
             </button>

@@ -66,7 +66,7 @@ function StepLine({ line, hideCandidat, prenom }: { line: RolePlayLine; hideCand
   }
   if (hideCandidat) {
     return (
-      <div className="animate-pop space-y-2 rounded-3xl border-2 border-dashed border-mint-300 bg-mint-50 p-6 text-center">
+      <div className="animate-pop space-y-2 rounded-3xl border-2 border-dashed border-mint-500 bg-mint-50 p-6 text-center">
         <p className="text-[17px] font-bold text-mint-800">{frenchNbsp(`À toi, ${prenom} : réponds à voix haute.`)}</p>
         <p className="text-sm text-mint-700">Tape sur « Voir la réplique type » quand tu as fini.</p>
       </div>
