@@ -170,7 +170,7 @@ export function SyncSection({ style }: { style?: CSSProperties } = {}) {
                 onChange={(e) => { setCodeInput(e.target.value); if (joinStage === 'error') setJoinStage('idle') }}
                 placeholder="XXXX-XXXX-XXXX-XXXX"
                 aria-label="Code de synchronisation, 16 caractères"
-                className="min-h-11 w-full rounded-xl border-2 border-navy-100 bg-white px-3.5 text-center font-mono text-[17px] uppercase tracking-widest text-ink-900 placeholder:font-sans placeholder:tracking-normal placeholder:text-ink-400 focus:border-mint-500"
+                className="min-h-11 w-full rounded-xl border-2 border-navy-100 bg-white px-3 text-center font-mono text-[clamp(14px,4.3vw,17px)] uppercase tracking-wide text-ink-900 placeholder:font-sans placeholder:tracking-normal placeholder:text-ink-400 focus:border-mint-500"
               />
             </label>
             <Button
@@ -223,7 +223,7 @@ export function SyncSection({ style }: { style?: CSSProperties } = {}) {
 
           <div className="rounded-2xl bg-navy-50 p-4 text-center">
             <p className="text-xs font-bold uppercase tracking-wide text-navy-500">Ton code</p>
-            <p className="mt-1 font-mono text-[26px] font-extrabold tracking-wider text-navy-900">{formatCode(status.code)}</p>
+            <p className="mt-1 whitespace-nowrap font-mono text-[clamp(15px,4.5vw,26px)] font-extrabold tracking-wide text-navy-900">{formatCode(status.code)}</p>
           </div>
 
           <div className="flex gap-2">
