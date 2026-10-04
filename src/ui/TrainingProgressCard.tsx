@@ -31,7 +31,7 @@ function ModePastilleRow({ modes }: { modes: ModeProgress[] }) {
 
 /**
  * Carte « Ta progression » : résumé des 7 modes d'entraînement (moyenne des `progress` + libellé
- * « X modes sur 7 commencés »). Calcul fourni par `useTrainingProgress()` / `computeTrainingProgress`
+ * « X modes sur 7 terminés »). Calcul fourni par `useTrainingProgress()` / `computeTrainingProgress`
  * (`trainingProgress.ts`) — ce composant ne fait que l'afficher, pour rester réutilisable tel quel sur
  * plusieurs pages (hub `/entrainement`, accueil).
  *

@@ -12,9 +12,9 @@ export interface ModeProgress {
   modeId: ModeId
   /** Au moins une trace d'activité dans ce mode (même sans succès). */
   started: boolean
-  /** Complété au sens du mode (voir règles ci-dessous) — toujours `false` si `started` est `false`. */
+  /** Terminé ET réussi au sens du mode (voir règles ci-dessous) — toujours `false` si `started` est `false`. */
   done: boolean
-  /** 0..1 */
+  /** 0..1 — ne compte que ce qui est terminé avec les bonnes réponses (jamais ce qui est seulement commencé). */
   progress: number
   /** Ligne de détail chiffrée, prête à afficher. */
   detail: string
@@ -23,9 +23,10 @@ export interface ModeProgress {
 export interface GlobalProgress {
   /** 0..1, moyenne des 7 modes. */
   progress: number
-  startedCount: number
+  /** Modes terminés et réussis. */
+  doneCount: number
   totalModes: number
-  /** « 3 modes sur 7 commencés » */
+  /** « 3 modes sur 7 terminés » */
   label: string
 }
 
@@ -63,29 +64,30 @@ function formatShortDateFR(at: number): string {
 }
 
 /* ------------------------------------------------------------------ */
-/* Oral seul / Avec un ami : nb de questions travaillées               */
+/* Oral seul / Avec un ami : nb de questions RÉUSSIES                  */
 /* ------------------------------------------------------------------ */
 
-export function computeOralProgress(history: PracticeHistory, totalQuestions: number): Omit<ModeProgress, 'modeId'> {
-  const workedCount = Object.keys(history).length
-  const started = workedCount > 0
+/** Score de grille (0–100, `computeOverallScore`) à partir duquel une question orale compte comme réussie. */
+export const ORAL_SUCCESS_SCORE = 80
+
+function computePracticeProgress(history: PracticeHistory, totalQuestions: number): Omit<ModeProgress, 'modeId'> {
+  const attempts = Object.values(history)
+  const started = attempts.length > 0
+  const successCount = Math.min(attempts.filter((a) => a.score >= ORAL_SUCCESS_SCORE).length, totalQuestions)
   return {
     started,
-    done: started,
-    progress: ratio(workedCount, totalQuestions),
-    detail: `${workedCount} / ${totalQuestions} questions travaillées`,
+    done: totalQuestions > 0 && successCount >= totalQuestions,
+    progress: ratio(successCount, totalQuestions),
+    detail: `${successCount} / ${totalQuestions} questions réussies`,
   }
 }
 
+export function computeOralProgress(history: PracticeHistory, totalQuestions: number): Omit<ModeProgress, 'modeId'> {
+  return computePracticeProgress(history, totalQuestions)
+}
+
 export function computeAmiProgress(history: PracticeHistory, totalQuestions: number): Omit<ModeProgress, 'modeId'> {
-  const workedCount = Object.keys(history).length
-  const started = workedCount > 0
-  return {
-    started,
-    done: started,
-    progress: ratio(workedCount, totalQuestions),
-    detail: `${workedCount} / ${totalQuestions} questions`,
-  }
+  return computePracticeProgress(history, totalQuestions)
 }
 
 /* ------------------------------------------------------------------ */
@@ -96,11 +98,16 @@ export function computeSimulationProgress(simulations: SimulationRecord[]): Omit
   const count = simulations.length
   const started = count > 0
   if (!started) return { started: false, done: false, progress: 0, detail: 'Aucune simulation pour le moment' }
-  const hasComplete = simulations.some((s) => s.length === 'complete')
-  const progress = hasComplete ? 1 : 0.5
+  // Réussie = terminée sans aucune étape notée « À revoir ». Fait = une complète réussie.
+  const cleanComplete = simulations.some((s) => s.length === 'complete' && s.revisitCount === 0)
+  const cleanShort = simulations.some((s) => s.length === 'courte' && s.revisitCount === 0)
+  const progress = cleanComplete ? 1 : cleanShort ? 0.5 : 0
   const latest = simulations.reduce((max, s) => (s.at > max ? s.at : max), simulations[0].at)
-  const detail = `${count} simulation${count > 1 ? 's' : ''}, dernière le ${formatShortDateFR(latest)}`
-  return { started: true, done: true, progress, detail }
+  const base = `${count} simulation${count > 1 ? 's' : ''}, dernière le ${formatShortDateFR(latest)}`
+  const detail = cleanComplete ? `Complète réussie · ${base}`
+    : cleanShort ? `Courte réussie · reste une complète sans « À revoir »`
+      : `${base} · pas encore sans « À revoir »`
+  return { started: true, done: cleanComplete, progress, detail }
 }
 
 /* ------------------------------------------------------------------ */
@@ -120,7 +127,6 @@ export function computeQuizProgress(quiz: QuizState, totalQuiz: number): Omit<Mo
   const done = totalQuiz > 0 && correctCount >= totalQuiz
 
   const parts: string[] = [`${correctCount} / ${totalQuiz} questions réussies`]
-  if (quiz.lastScore) parts.push(`dernier score ${quiz.lastScore.correct}/${quiz.lastScore.total}`)
   if (wrongCount > 0) parts.push(`${wrongCount} erreur${wrongCount > 1 ? 's' : ''} à revoir`)
 
   return { started: true, done, progress, detail: parts.join(' · ') }
@@ -131,13 +137,15 @@ export function computeQuizProgress(quiz: QuizState, totalQuiz: number): Omit<Mo
 /* ------------------------------------------------------------------ */
 
 export function computeSituationsProgress(situations: SituationsState, totalSituations: number): Omit<ModeProgress, 'modeId'> {
-  const doneCount = Object.values(situations).filter((s) => s.done).length
-  const started = doneCount > 0
+  const values = Object.values(situations).filter((s) => s.done)
+  const started = values.length > 0
+  // Réussie = terminée avec toutes les réponses justes à son mini-quiz.
+  const successCount = Math.min(values.filter((s) => !s.score || s.score[0] >= s.score[1]).length, totalSituations)
   return {
     started,
-    done: started,
-    progress: ratio(doneCount, totalSituations),
-    detail: `${doneCount} / ${totalSituations} situation${totalSituations > 1 ? 's' : ''}`,
+    done: totalSituations > 0 && successCount >= totalSituations,
+    progress: ratio(successCount, totalSituations),
+    detail: `${successCount} / ${totalSituations} situations réussies`,
   }
 }
 
@@ -169,7 +177,7 @@ export function computeRevisionProgress(statutQuestions: Record<string, Question
   const started = values.length > 0
   return {
     started,
-    done: started,
+    done: totalQuestions > 0 && maitriseCount >= totalQuestions,
     progress: ratio(maitriseCount, totalQuestions),
     detail: `${maitriseCount} maîtrisée${maitriseCount > 1 ? 's' : ''} · ${aRevoirCount} à revoir`,
   }
@@ -192,11 +200,11 @@ export function computeTrainingProgress(inputs: TrainingProgressInputs): Trainin
   ]
 
   const totalModes = modes.length
-  const startedCount = modes.filter((m) => m.started).length
+  const doneCount = modes.filter((m) => m.done).length
   const progress = totalModes > 0 ? modes.reduce((sum, m) => sum + m.progress, 0) / totalModes : 0
-  const label = startedCount === 0
-    ? `Aucun mode commencé sur ${totalModes}`
-    : `${startedCount} mode${startedCount > 1 ? 's' : ''} sur ${totalModes} commencé${startedCount > 1 ? 's' : ''}`
+  const label = doneCount === 0
+    ? `Aucun mode terminé sur ${totalModes}`
+    : `${doneCount} mode${doneCount > 1 ? 's' : ''} sur ${totalModes} terminé${doneCount > 1 ? 's' : ''}`
 
-  return { modes, global: { progress, startedCount, totalModes, label } }
+  return { modes, global: { progress, doneCount, totalModes, label } }
 }
