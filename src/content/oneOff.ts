@@ -7,7 +7,6 @@ export type OneOffId =
   | 'lire-metier'
   | 'simulation-complete'
   | 'ami'
-  | 'pdg'
   | 'preparatifs'
 
 export interface OneOffTask {
@@ -56,11 +55,6 @@ export const ONE_OFF_TASKS: OneOffTask[] = [
     title: 'T’entraîner avec quelqu’un',
     detail: 'Un ami ou un proche te pose les questions et coche ce qu’il entend.',
     link: '/entrainement/ami/Q1',
-  },
-  {
-    id: 'pdg',
-    title: 'La veille : vérifier l’actualité',
-    detail: 'Sur ratpgroup.com, vérifie le nom du PDG et les dernières nouvelles (5 minutes).',
   },
   {
     id: 'preparatifs',

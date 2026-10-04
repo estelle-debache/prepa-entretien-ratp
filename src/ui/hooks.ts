@@ -61,7 +61,13 @@ export function useAmiHistory() {
   return usePersisted<PracticeHistory>('ami', {})
 }
 
-export interface QuizState { wrongIds: string[]; lastScore?: { correct: number; total: number }; lastAt?: number }
+export interface QuizState {
+  wrongIds: string[]
+  lastScore?: { correct: number; total: number }
+  lastAt?: number
+  /** Questions déjà répondues au moins une fois (toutes séries confondues). */
+  seenIds?: string[]
+}
 
 export function useQuizState() {
   return usePersisted<QuizState>('quiz', { wrongIds: [] })
@@ -80,6 +86,13 @@ export interface SimulationRecord {
   mode: 'seul' | 'ami'
   averages: Record<string, number>
   revisitCount: number
+}
+
+/** Exercice des 5 réflexes : nombre d'essais, de réussites, date du dernier essai. */
+export interface ReflexState { attempts: number; successes: number; lastAt?: number }
+
+export function useReflexState() {
+  return usePersisted<ReflexState>('reflexes', { attempts: 0, successes: 0 })
 }
 
 export function useSimulationsHistory() {

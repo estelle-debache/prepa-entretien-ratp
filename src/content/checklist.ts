@@ -81,12 +81,6 @@ export const CHECKLIST: ChecklistGroup[] = [
         "text": [
           "De quoi noter."
         ]
-      },
-      {
-        "id": "CL-2-6",
-        "text": [
-          "Ta fiche perso."
-        ]
       }
     ]
   },
@@ -97,7 +91,7 @@ export const CHECKLIST: ChecklistGroup[] = [
       {
         "id": "CL-3-1",
         "text": [
-          "Arrive 15 min avant."
+          "Arrive 30 min avant."
         ]
       },
       {

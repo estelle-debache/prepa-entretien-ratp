@@ -5,15 +5,21 @@ import { QUIZ } from '../../content/quiz/quiz'
 import type { QuizItem } from '../../content/quiz/types'
 import { pickQuiz, scoreQuiz, shuffleQuizOptions } from '../../lib/practice/quiz'
 import { reportActivityDone } from '../../lib/practice/activity'
-import { Button, Card, ProgressBar } from '../../ui/primitives'
+import { Button, Card, Chip, ProgressBar } from '../../ui/primitives'
 import { useQuizState } from '../../ui/hooks'
 import { frenchNbsp } from '../../ui/format'
 
 type Stage = 'setup' | 'quiz' | 'result'
 
+// Ordre d'affichage voulu : clés dans cet ordre = ordre des puces de thème et des sections « Par thème ».
 const CATEGORY_LABELS: Record<string, string> = {
-  ratp: 'Groupe RATP', metier: 'Métier & formation', regles: 'Règles', lexique: 'Lexique', situation: 'Mises en situation',
+  ratp: 'Groupe RATP', metier: 'Métier & formation', regles: 'Règles', lexique: 'Lexique', situation: 'Mises en situation', 'savoir-etre': 'Savoir-être',
 }
+const CATEGORY_ORDER = Object.keys(CATEGORY_LABELS)
+/** Catégories réellement présentes dans la banque, avec leur effectif, dans l'ordre d'affichage. */
+const QUIZ_CATEGORIES = CATEGORY_ORDER
+  .map((id) => ({ id, label: CATEGORY_LABELS[id], count: QUIZ.filter((item) => item.category === id).length }))
+  .filter((c) => c.count > 0)
 
 export default function Quiz() {
   const [searchParams] = useSearchParams()
@@ -31,6 +37,8 @@ export default function Quiz() {
   const [items, setItems] = useState<QuizItem[]>(() => (preset ? pickQuiz(preset.pool, preset.n).map((item) => shuffleQuizOptions(item)) : []))
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, number>>({})
+  // Thème choisi à l'écran de départ : s'applique à « Série de 10 » et « Tout faire », pas à « Reprendre mes erreurs ».
+  const [theme, setTheme] = useState<string>('all')
 
   const start = (n: number, pool: QuizItem[] = QUIZ) => {
     const picked = pickQuiz(pool, n).map((item) => shuffleQuizOptions(item))
@@ -53,7 +61,14 @@ export default function Quiz() {
     if (isLast) {
       const result = scoreQuiz(items, answers)
       const wrongIds = items.filter((item) => answers[item.id] !== item.answer).map((item) => item.id)
-      setQuizState({ wrongIds, lastScore: { correct: result.correct, total: result.total }, lastAt: Date.now() })
+      const seriesIds = items.map((item) => item.id)
+      setQuizState((previous) => ({
+        ...previous,
+        wrongIds,
+        lastScore: { correct: result.correct, total: result.total },
+        lastAt: Date.now(),
+        seenIds: Array.from(new Set([...(previous.seenIds ?? []), ...seriesIds])),
+      }))
       reportActivityDone({ kind: 'quiz' })
       setStage('result')
     } else {
@@ -63,24 +78,42 @@ export default function Quiz() {
 
   if (stage === 'setup') {
     const previousWrong = quizState.wrongIds.length > 0 ? QUIZ.filter((item) => quizState.wrongIds.includes(item.id)) : []
+    const pool = theme === 'all' ? QUIZ : QUIZ.filter((item) => item.category === theme)
+    const serieN = Math.min(10, pool.length)
     return (
       <div className="space-y-5">
         <header className="animate-rise space-y-1">
           <h1 className="text-2xl font-extrabold tracking-tight text-navy-900">Quiz</h1>
           <p className="text-[15px] text-ink-600">Des questions rapides pour vérifier ce que tu sais déjà.</p>
         </header>
-        <div className="animate-rise space-y-3">
+
+        <div className="animate-rise space-y-4" style={{ animationDelay: '30ms' }}>
           {previousWrong.length > 0 ? (
             <Button variant="secondary" onClick={() => start(previousWrong.length, previousWrong)} className="w-full">
               Reprendre mes erreurs ({previousWrong.length})
             </Button>
           ) : null}
-          <Button variant="primary" onClick={() => start(10)} className="w-full">
-            <Zap aria-hidden="true" className="size-4" /> Série de 10 questions
-          </Button>
-          <Button variant="ghost" onClick={() => start(QUIZ.length)} className="w-full">
-            Tout faire ({QUIZ.length} questions)
-          </Button>
+
+          <div className="space-y-2">
+            <h2 className="text-xs font-bold uppercase tracking-wide text-mint-600">Thème</h2>
+            <div className="flex flex-wrap gap-2">
+              <Chip active={theme === 'all'} onClick={() => setTheme('all')}>Tous les thèmes ({QUIZ.length})</Chip>
+              {QUIZ_CATEGORIES.map((c) => (
+                <Chip key={c.id} active={theme === c.id} onClick={() => setTheme((v) => (v === c.id ? 'all' : c.id))}>
+                  {c.label} ({c.count})
+                </Chip>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Button variant="primary" onClick={() => start(serieN, pool)} disabled={pool.length === 0} className="w-full">
+              <Zap aria-hidden="true" className="size-4" /> Série de {serieN} question{serieN === 1 ? '' : 's'}
+            </Button>
+            <Button variant="ghost" onClick={() => start(pool.length, pool)} disabled={pool.length === 0} className="w-full">
+              Tout faire ({pool.length} question{pool.length === 1 ? '' : 's'})
+            </Button>
+          </div>
         </div>
       </div>
     )
@@ -134,6 +167,9 @@ export default function Quiz() {
 
   const result = scoreQuiz(items, answers)
   const wrongItems = items.filter((item) => answers[item.id] !== item.answer)
+  const byCategoryEntries = Object.entries(result.byCategory).sort(
+    ([a], [b]) => CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b),
+  )
 
   return (
     <div className="animate-fade space-y-5">
@@ -144,7 +180,7 @@ export default function Quiz() {
 
       <Card className="space-y-3">
         <h2 className="text-xs font-bold uppercase tracking-wide text-mint-600">Par thème</h2>
-        {Object.entries(result.byCategory).map(([category, { correct, total }]) => (
+        {byCategoryEntries.map(([category, { correct, total }]) => (
           <div key={category} className="space-y-1">
             <div className="flex items-center justify-between text-sm font-semibold text-navy-700">
               <span>{CATEGORY_LABELS[category] ?? category}</span>

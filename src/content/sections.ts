@@ -193,7 +193,7 @@ export const SECTIONS: Section[] = [
         "type": "ul",
         "items": [
           [
-            "Arrive 15 min en avance."
+            "Arrive 30 min en avance."
           ],
           [
             "Porte une tenue propre et sobre."
@@ -498,7 +498,7 @@ export const SECTIONS: Section[] = [
       {
         "type": "p",
         "text": [
-          "Arriver 15 min en avance. Tenue propre et sobre. Téléphone éteint. Saluer tout le monde, vouvoyer. Prendre 2 secondes avant de répondre. Ne jamais mentir, ne jamais critiquer, ne pas parler salaire en premier. À la fin : remercier."
+          "Arriver 30 min en avance. Tenue propre et sobre. Téléphone éteint. Saluer tout le monde, vouvoyer. Prendre 2 secondes avant de répondre. Ne jamais mentir, ne jamais critiquer, ne pas parler salaire en premier. À la fin : remercier."
         ]
       }
     ]
