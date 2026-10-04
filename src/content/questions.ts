@@ -26,34 +26,19 @@ export const TOP_QUESTIONS: TopQuestion[] = [
         "hint": "ton prénom",
         "fallback": "Yahia"
       },
-      ", j'ai 18 ans et j'habite à Évry-Courcouronnes. J'ai obtenu un CAP Agent accompagnant au grand âge. Cette formation m'a appris à être attentif aux personnes et à prévenir mon responsable quand quelque chose ne va pas. ",
+      ", j'ai 18 ans et j'habite à Évry-Courcouronnes. J'ai obtenu un CAP Agent accompagnant au grand âge. Cette formation m'a appris à être attentif aux personnes, à leurs besoins et à leur sécurité. ",
       "J'ai fait mes stages dans ",
       {
         "field": "stageLieu",
         "hint": "lieu de tes stages"
       },
       ".",
-      " ",
-      "J'ai aussi fait le planning des chauffeurs dans ",
-      {
-        "field": "entreprise",
-        "hint": "comment tu présentes l’entreprise",
-        "fallback": "une entreprise de transport de marchandises et de logistique"
-      },
-      ".",
-      " ",
-      "J'y ai travaillé ",
-      {
-        "field": "experienceDuree",
-        "hint": "combien de temps"
-      },
-      ", pour ",
+      " Actuellement, je suis salarié dans une entreprise de transport logistique de ",
       {
         "field": "nbChauffeurs",
-        "hint": "combien de chauffeurs"
+        "hint": "nombre de chauffeurs"
       },
-      ".",
-      " Là, j'ai vu de près ce qu'un retard ou une absence coûte à toute une équipe. Aujourd'hui, je veux devenir conducteur de bus, parce que ce métier réunit les deux choses qui me plaisent : le transport et le contact avec les gens. Et je veux le faire dans le groupe RATP. C'est un service public utilisé par énormément de gens chaque jour. Et la formation en alternance me permet d'apprendre le métier sérieusement, avec un tuteur. C'est le bon moment pour moi : j'ai mon diplôme, je sais ce que je veux, et je suis prêt à m'investir."
+      " chauffeurs, je m'occupe des plannings des tournées des chauffeurs. Aujourd'hui, je veux devenir conducteur de bus, parce que ce métier réunit les deux choses qui me plaisent : le transport et le contact avec les gens. Et je veux le faire dans le groupe RATP. C'est un service public utilisé par énormément de gens chaque jour. Et la formation en alternance me permet d'apprendre le métier sérieusement, avec un tuteur. C'est le bon moment pour moi : je sais ce que je veux, je veux construire mon avenir dans une entreprise stable, je veux m'investir avec sérieux et avoir un objectif de vie."
     ],
     "avoid": [
       "réciter sans naturel ; inventer une anecdote ; parler comme si j'étais déjà conducteur formé."

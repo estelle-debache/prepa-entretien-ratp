@@ -40,7 +40,7 @@ export const PROFILE_FIELDS: ProfileField[] = [
     options: ['salarié déclaré', 'en aide familiale', 'en stage'],
   },
   { id: 'experienceDuree', group: 'experience', label: 'Pendant combien de temps ?', type: 'text', placeholder: 'ex. un an' },
-  { id: 'nbChauffeurs', group: 'experience', label: 'Pour combien de chauffeurs ?', type: 'text', placeholder: 'ex. une dizaine de chauffeurs' },
+  { id: 'nbChauffeurs', group: 'experience', label: 'Combien de chauffeurs dans l’entreprise ?', help: 'Complète la phrase « une entreprise de … chauffeurs ».', type: 'text', placeholder: 'ex. 12' },
   {
     id: 'imprevuPlanning',
     group: 'experience',
