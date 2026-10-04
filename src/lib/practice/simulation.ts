@@ -3,7 +3,7 @@ import { BANK_QUESTIONS, TOP_QUESTIONS } from '../../content/questions'
 import { SITUATIONS } from '../../content/situations'
 import { shuffle } from './selection'
 
-export type SimulationStep = { kind: 'question'; questionId: string } | { kind: 'situation'; situationId: string } | { kind: 'recruteur' }
+export type SimulationStep = { kind: 'question'; questionId: string } | { kind: 'situation'; situationId: string }
 export const OFFICIAL_CRITERIA = [
   'connaissance de l’entreprise et du métier', 'capacité à exercer ce métier', 'motivations', 'adaptation à la culture de l’entreprise',
 ] as const
@@ -41,7 +41,6 @@ export function buildSimulation({ length, statuses = {}, rng = Math.random }: {
       ...choose(pick(['Q9', 'Q13']), 1),
       ...situationPool.slice(0, 1).map((s) => ({ kind: 'situation' as const, situationId: s.id })),
       ...choose(pick(['Q14', 'Q15']), 1),
-      { kind: 'recruteur' },
     ]
   }
   const situationCount = 2
@@ -53,7 +52,7 @@ export function buildSimulation({ length, statuses = {}, rng = Math.random }: {
     ...bankPick(['metier', 'securite', 'contraintes'], 2),
     ...situationPool.slice(0, situationCount).map((s) => ({ kind: 'situation' as const, situationId: s.id })),
     ...choose(pick(['Q12']), 1), ...bankPick(['culture', 'pieges'], 1),
-    ...choose(pick(['Q14', 'Q15']), 2), { kind: 'recruteur' },
+    ...choose(pick(['Q14', 'Q15']), 2),
   ]
   return steps
 }

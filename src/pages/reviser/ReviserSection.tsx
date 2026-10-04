@@ -5,7 +5,6 @@ import { useProfile } from '../../ui/hooks'
 import { RatpExtras } from './RatpExtras'
 import { LexiconCards } from './LexiconCards'
 import { ChecklistSection } from './ChecklistSection'
-import { RecruiterQuestions } from './RecruiterQuestions'
 import { MistakesList } from './MistakesList'
 
 export default function ReviserSection() {
@@ -34,7 +33,6 @@ export default function ReviserSection() {
       {section.id === 'ratp' ? <RatpExtras profile={profile} /> : null}
       {section.id === 'metier' ? <LexiconCards /> : null}
       {section.id === 'checklist' ? <ChecklistSection profile={profile} /> : null}
-      {section.id === 'recruteur' ? <RecruiterQuestions /> : null}
       {section.id === 'erreurs' ? <MistakesList /> : null}
     </div>
   )

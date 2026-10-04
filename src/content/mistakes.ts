@@ -47,11 +47,6 @@ export const MISTAKES: MistakeItem[] = [
     "text": "choisis les informations utiles et explique ce qui t'a marqué."
   },
   {
-    "id": "E10",
-    "title": "Dire que ton déménagement conditionne ta disponibilité",
-    "text": "présente-le comme un projet, pas comme une condition."
-  },
-  {
     "id": "E11",
     "title": "T'excuser d'être jeune",
     "text": "parle de tes responsabilités et de ta volonté d'apprendre."

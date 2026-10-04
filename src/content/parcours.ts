@@ -118,7 +118,7 @@ export const PARCOURS: ParcoursStepTemplate[] = [
   {
     key: 'simulation',
     title: 'Simulation d’entretien',
-    why: '8 questions à la suite, comme le jour J. Seul ou avec quelqu’un.',
+    why: '7 questions à la suite, comme le jour J. Seul ou avec quelqu’un.',
     minutes: 15,
     activity: { kind: 'simulation' },
   },

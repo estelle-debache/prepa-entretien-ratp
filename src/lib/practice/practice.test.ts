@@ -39,7 +39,7 @@ describe('practice pure helpers', () => {
   it('keeps Q1 first in simulations and scores by official criterion', () => {
     const steps = buildSimulation({ length: 'complete', statuses: { Q2: 'a-revoir' }, rng: mulberry32(5) })
     expect(steps[0]).toEqual({ kind: 'question', questionId: 'Q1' })
-    expect(steps.at(-1)).toEqual({ kind: 'recruteur' })
+    expect(steps.some((step) => (step as { kind: string }).kind === 'recruteur')).toBe(false)
     const summary = summarizeSimulation(steps, { 0: 1, 1: 2 })
     expect(summary.revisit).toEqual([steps[0]])
     expect(summary.averages['motivations']).toBeDefined()
@@ -52,9 +52,10 @@ describe('practice pure helpers', () => {
   it('builds a fixed eight-step short simulation across seeds', () => {
     for (const seed of [1, 7, 42, 2026]) {
       const steps = buildSimulation({ length: 'courte', statuses: { Q3: 'a-revoir', Q13: 'a-revoir' }, rng: mulberry32(seed) })
-      expect(steps).toHaveLength(8)
+      expect(steps).toHaveLength(7)
       expect(steps[0]).toEqual({ kind: 'question', questionId: 'Q1' })
-      expect(steps.at(-1)).toEqual({ kind: 'recruteur' })
+      const last = steps.at(-1)
+      expect(last?.kind === 'question' && ['Q14', 'Q15'].includes(last.questionId)).toBe(true)
       expect(steps.filter((step) => step.kind === 'situation')).toHaveLength(1)
       const finalOralIds = steps.filter((step) => step.kind === 'question' && ['Q9', 'Q13'].includes(step.questionId)).map((step) => step.kind === 'question' ? step.questionId : '')
       expect(finalOralIds).toHaveLength(1)

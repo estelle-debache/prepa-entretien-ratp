@@ -179,7 +179,7 @@ export const SECTIONS: Section[] = [
             ")."
           ],
           [
-            "Contraintes et questions de ta part : environ 10 min."
+            "Contraintes et fin de l'entretien : environ 10 min."
           ]
         ]
       },
@@ -344,20 +344,6 @@ export const SECTIONS: Section[] = [
     ]
   },
   {
-    "id": "recruteur",
-    "num": 9,
-    "title": "Les questions à poser au recruteur",
-    "summary": "Choisis deux ou trois questions utiles à poser.",
-    "blocks": [
-      {
-        "type": "p",
-        "text": [
-          "Pose 2 ou 3 questions, pas les 6. Ne pose pas de question sur le salaire ou les congés. Note les réponses."
-        ]
-      }
-    ]
-  },
-  {
     "id": "erreurs",
     "num": 10,
     "title": "Les erreurs à ne pas faire le jour J",
@@ -397,7 +383,7 @@ export const SECTIONS: Section[] = [
       },
       {
         "type": "h",
-        "text": "Ton histoire en 3 phrases"
+        "text": "3 phrases clés"
       },
       {
         "type": "ol",
@@ -409,19 +395,19 @@ export const SECTIONS: Section[] = [
               "hint": "comment tu présentes l’entreprise",
               "fallback": "une entreprise de transport de marchandises et de logistique"
             },
-            ". J'ai vu ce qu'un retard coûte."
+            "."
           ],
           [
             "J'aime aider les gens : j'ai un CAP pour accompagner les personnes âgées. Je sais être patient avec des personnes fragiles."
           ],
           [
-            "Conducteur de bus, c'est les deux : conduire en sécurité et rendre service au public, dans le groupe qui fait rouler les bus et les métros de Paris depuis 1949."
+            "Conducteur de bus, c'est : conduire en toute sécurité et rendre service au public, dans le groupe qui fait rouler les bus et les métros de Paris depuis 1949."
           ]
         ]
       },
       {
         "type": "h",
-        "text": "8 faits RATP"
+        "text": "Faits RATP à retenir"
       },
       {
         "type": "ol",
@@ -439,9 +425,6 @@ export const SECTIONS: Section[] = [
             "Environ 73 000 collaborateurs, environ 4,5 milliards de voyages par an, une quinzaine de pays (2026)."
           ],
           [
-            "Bus : 12 lots ouverts à la concurrence ; **RATP Cap Île-de-France** (filiale du groupe) en a gagné **8**. Les lots de Paris démarrent le **1er novembre 2026**. Le groupe reste public."
-          ],
-          [
             "Environ 75 % de bus « propres » en Île-de-France fin 2025."
           ],
           [
@@ -454,13 +437,13 @@ export const SECTIONS: Section[] = [
       },
       {
         "type": "h",
-        "text": "Les 4 phrases sensibles"
+        "text": "Les 3 phrases sensibles"
       },
       {
         "type": "ul",
         "items": [
           [
-            "**Âge et permis** *(seulement si on te pose la question)* : « J'ai mon permis depuis juin 2026, j'aurai mes 6 mois en décembre. Un permis récent, pour moi, c'est zéro écart : pas de téléphone, zéro alcool, mes points à protéger. »"
+            "**Âge et permis** *(seulement si on te pose la question)* : « J'ai mon permis depuis juin 2026. Un permis récent, pour moi, c'est zéro écart : pas de téléphone, zéro alcool, mes points à protéger. Et surtout être au fait des dernières réglementations en vigueur. »"
           ],
           [
             "**Horaires à 5 h :** d'abord ta solution concrète depuis Évry (",
@@ -468,10 +451,7 @@ export const SECTIONS: Section[] = [
               "link": "/fiche",
               "text": "ta fiche perso"
             },
-            "). Ensuite seulement : « En plus, je prévois de m'installer à Sucy-en-Brie, plus près des centres bus du Val-de-Marne. » Jamais « ça dépendra »."
-          ],
-          [
-            "**Concurrence :** « Ce n'est pas une privatisation, le groupe reste public. Il a gardé 8 lots sur 12 et il recrute. Si on m'affecte chez RATP Cap Île-de-France, ça me va très bien. »"
+            "). « J'ai l'habitude de travailler tôt ou à des horaires décalés, c'est le cas dans mon entreprise actuelle. »"
           ],
           [
             "**Grèves, politique, religion :** « C'est un droit. Moi, ce qui compte, c'est d'être là pour les voyageurs et de respecter les règles. »"
@@ -518,12 +498,7 @@ export const SECTIONS: Section[] = [
       {
         "type": "p",
         "text": [
-          "Arriver 15 min en avance. Tenue propre et sobre. Téléphone éteint. Saluer tout le monde, vouvoyer. Prendre 2 secondes avant de répondre. Ne jamais mentir, ne jamais critiquer, ne pas parler salaire en premier. À la fin : poser 2 ou 3 questions (",
-          {
-            "link": "/reviser/recruteur",
-            "text": "questions au recruteur"
-          },
-          ") et remercier."
+          "Arriver 15 min en avance. Tenue propre et sobre. Téléphone éteint. Saluer tout le monde, vouvoyer. Prendre 2 secondes avant de répondre. Ne jamais mentir, ne jamais critiquer, ne pas parler salaire en premier. À la fin : remercier."
         ]
       }
     ]

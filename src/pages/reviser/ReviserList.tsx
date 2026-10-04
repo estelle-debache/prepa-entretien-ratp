@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Bus, ChevronRight, ClipboardList, GraduationCap, MessageCircleQuestion, Route, ShieldCheck, Signpost, TriangleAlert, type LucideIcon } from 'lucide-react'
+import { Bus, ChevronRight, ClipboardList, GraduationCap, Route, ShieldCheck, Signpost, TriangleAlert, type LucideIcon } from 'lucide-react'
 import { SECTIONS } from '../../content'
 import type { SectionId } from '../../content/types'
 
@@ -9,7 +9,6 @@ const icons: Record<SectionId, LucideIcon> = {
   deroule: Route,
   ratp: Bus,
   metier: GraduationCap,
-  recruteur: MessageCircleQuestion,
   erreurs: TriangleAlert,
   checklist: ClipboardList,
   memo: ClipboardList,

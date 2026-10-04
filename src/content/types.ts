@@ -104,7 +104,6 @@ export type SectionId =
   | 'mode-emploi' // 0
   | 'evaluation' // 2
   | 'deroule' // 3
-  | 'recruteur' // 9
   | 'ratp' // 4
   | 'metier' // 5
   | 'erreurs' // 10
@@ -236,16 +235,8 @@ export interface RolePlay {
 }
 
 /* ------------------------------------------------------------------ */
-/* Section 9 : questions au recruteur ; section 10 : erreurs            */
+/* Section 10 : erreurs                                                  */
 /* ------------------------------------------------------------------ */
-
-export interface RecruiterQuestion {
-  /** R1 … R6 */
-  id: string
-  text: string
-  /** Condition d'usage (ex. 6e question) */
-  condition?: string
-}
 
 export interface MistakeItem {
   /** E1 … */

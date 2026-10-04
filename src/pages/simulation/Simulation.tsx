@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { ArrowRight, Pause, Play, RotateCcw, Users } from 'lucide-react'
-import { getQuestion, RECRUITER_QUESTIONS, SITUATIONS } from '../../content'
+import { getQuestion, SITUATIONS } from '../../content'
 import type { Profile } from '../../content/types'
 import { simulationIntro } from '../../content/practice/simulationIntro'
 import {
@@ -22,7 +22,6 @@ type Length = 'courte' | 'complete'
 type Mode = 'seul' | 'ami'
 type Stage = 'setup' | 'running' | 'summary'
 const SITUATION_TARGET: [number, number] = [30, 45]
-const RECRUTEUR_TARGET: [number, number] = [30, 60]
 
 export default function Simulation() {
   const [searchParams] = useSearchParams()
@@ -81,7 +80,7 @@ export default function Simulation() {
         <Card className="animate-rise space-y-3">
           <h2 className="text-[15px] font-bold text-navy-900">Durée</h2>
           <div className="flex gap-2">
-            <Chip active={length === 'courte'} onClick={() => setLength('courte')}>Courte (8 étapes)</Chip>
+            <Chip active={length === 'courte'} onClick={() => setLength('courte')}>Courte (7 étapes)</Chip>
             <Chip active={length === 'complete'} onClick={() => setLength('complete')}>Complète</Chip>
           </div>
         </Card>
@@ -178,13 +177,7 @@ function RevisitRow({ step }: { step: SimulationStep }) {
       </li>
     )
   }
-  return (
-    <li>
-      <Link to="/reviser/recruteur" className="flex items-center justify-between gap-2 rounded-xl bg-coral-50 px-3.5 py-2.5 text-sm font-semibold text-coral-800">
-        Questions au recruteur <ArrowRight aria-hidden="true" className="size-4 shrink-0" />
-      </Link>
-    </li>
-  )
+  return null
 }
 
 function SimulationStepView({
@@ -216,7 +209,7 @@ function SimulationStepView({
       const example = q.kind === 'top' ? q.example : q.hook
       reveal = <QuotedRichText text={example} profile={profile} />
     }
-  } else if (step.kind === 'situation') {
+  } else {
     const s = SITUATIONS.find((x) => x.id === step.situationId)
     if (s) {
       prompt = `Mise en situation : ${s.title}`
@@ -229,17 +222,6 @@ function SimulationStepView({
         </div>
       )
     }
-  } else {
-    prompt = 'Avez-vous des questions à nous poser ?'
-    target = RECRUTEUR_TARGET
-    reveal = (
-      <div className="space-y-2">
-        <ul className="space-y-1.5 text-[15px] text-ink-900">
-          {RECRUITER_QUESTIONS.slice(0, 3).map((r) => <li key={r.id}>• {frenchNbsp(r.text)}</li>)}
-        </ul>
-        <Link to="/reviser/recruteur" className="text-sm font-semibold text-mint-700 underline">Voir toutes les questions possibles</Link>
-      </div>
-    )
   }
 
   const startRec = async () => { stopSpeaking(); stopwatch.reset(); await rec.start(); stopwatch.start() }

@@ -59,7 +59,7 @@ function makeStep(index: number, tour: number, ctx: ResolveContext, frozenTarget
       subtitle = `${id} · ${truncate(item?.title ?? id)}`
       break
     }
-    case 'simulation': route = '/simulation?length=courte'; subtitle = 'Courte · 8 étapes'; break
+    case 'simulation': route = '/simulation?length=courte'; subtitle = 'Courte · 7 étapes'; break
   }
   return { index, key: template.key, title: template.title, why: template.why, minutes: template.minutes, kind: activity.kind, route, target, subtitle }
 }
