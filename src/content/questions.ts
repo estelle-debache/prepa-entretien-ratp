@@ -1359,7 +1359,7 @@ export const BANK_QUESTIONS: BankQuestion[] = [
       ]
     ],
     "hook": [
-      "Oui. Au planning, j'ai vu ce qu'un retard coûte à toute une équipe : je prévois mon trajet et je pars avec de la marge."
+      "Oui. Dans mon entreprise actuelle, sur le poste que j'occupe, j'ai vu ce qu'un retard coûte à l'entreprise : je prévois mon trajet et je pars avec de la marge."
     ],
     "targetSeconds": [
       15,
