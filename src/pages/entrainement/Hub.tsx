@@ -1,25 +1,76 @@
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { ArrowRight, FastForward, Gamepad2, ListOrdered, Mic, PartyPopper, Sparkles, Users, Zap, type LucideIcon } from 'lucide-react'
+import { ArrowRight, Check, FastForward, Gamepad2, ListOrdered, Mic, PartyPopper, Sparkles, Users, Zap, type LucideIcon } from 'lucide-react'
 import { QUESTIONS, SITUATIONS } from '../../content'
+import { QUIZ } from '../../content/quiz/quiz'
 import { quickReviewOrder } from '../../lib/practice/selection'
 import { isTourFinished, withParcours } from '../../lib/practice/parcours'
-import { useStatutQuestions } from '../../ui/hooks'
+import {
+  useAmiHistory, useOralHistory, useReflexState, useSimulationsHistory, useSituationsState, useStatutQuestions, useQuizState,
+} from '../../ui/hooks'
 import { useParcoursEngine } from '../../ui/useParcoursEngine'
 import { goToNextTour } from '../../ui/parcoursActions'
 import { STEP_ICONS } from '../../ui/stepIcons'
 import { frenchNbsp } from '../../ui/format'
+import { ProgressBar } from '../../ui/primitives'
+import { TrainingProgressCard } from '../../ui/TrainingProgressCard'
+import { computeTrainingProgress, type ModeId, type ModeProgress } from '../../ui/trainingProgress'
 
-interface ModeCard { id: string; icon: LucideIcon; title: string; description: string; to: string }
+interface ModeCard { id: ModeId; icon: LucideIcon; title: string; description: string; to: string }
+
+/** Pastille d'état : lisible visuellement (couleur + texte) et par VoiceOver via le `aria-label` de la carte parente. */
+function ModeStatusPill({ started, done }: { started: boolean; done: boolean }) {
+  if (done) {
+    return (
+      <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-mint-100 bg-mint-50 px-2.5 py-1 text-xs font-bold text-mint-700">
+        <Check aria-hidden="true" className="size-3.5" strokeWidth={3} /> Fait
+      </span>
+    )
+  }
+  if (started) {
+    return (
+      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-100 bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">
+        <span aria-hidden="true" className="size-1.5 rounded-full bg-amber-500" /> En cours
+      </span>
+    )
+  }
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-navy-100 bg-navy-50 px-2.5 py-1 text-xs font-semibold text-navy-500">
+      <span aria-hidden="true" className="size-1.5 rounded-full bg-navy-300" /> Pas encore fait
+    </span>
+  )
+}
+
+function modeStateLabel(started: boolean, done: boolean): string {
+  return done ? 'Fait' : started ? 'En cours' : 'Pas encore fait'
+}
 
 export default function Hub() {
   const navigate = useNavigate()
   const [statutQuestions] = useStatutQuestions()
+  const [oralHistory] = useOralHistory()
+  const [amiHistory] = useAmiHistory()
+  const [simulations] = useSimulationsHistory()
+  const [quiz] = useQuizState()
+  const [situations] = useSituationsState()
+  const [reflex] = useReflexState()
   const engine = useParcoursEngine()
   const { state, step } = engine
   const finished = isTourFinished(state)
 
   const recommendedId = useMemo(() => quickReviewOrder(QUESTIONS, statutQuestions)[0]?.id ?? 'Q1', [statutQuestions])
+
+  const trainingProgress = useMemo(
+    () => computeTrainingProgress({
+      oralHistory, amiHistory, simulations, quiz, situations, reflex, statutQuestions,
+      totals: { questions: QUESTIONS.length, situations: SITUATIONS.length, quiz: QUIZ.length },
+    }),
+    [oralHistory, amiHistory, simulations, quiz, situations, reflex, statutQuestions],
+  )
+  const progressByMode = useMemo(
+    () => Object.fromEntries(trainingProgress.modes.map((m) => [m.modeId, m])) as Record<ModeId, ModeProgress>,
+    [trainingProgress],
+  )
 
   const modes: ModeCard[] = [
     { id: 'oral', icon: Mic, title: 'Oral seul', description: 'Réponds à voix haute, chronométré, puis auto-évalue-toi.', to: `/entrainement/oral/${recommendedId}` },
@@ -39,6 +90,8 @@ export default function Hub() {
         <h1 className="text-2xl font-extrabold tracking-tight text-navy-900">S'entraîner</h1>
         <p className="text-[15px] text-ink-600">{frenchNbsp('Choisis un mode. Les sessions sont courtes : 5 à 15 minutes suffisent.')}</p>
       </header>
+
+      <TrainingProgressCard global={trainingProgress.global} className="animate-rise" />
 
       {finished ? (
         <button
@@ -78,24 +131,39 @@ export default function Hub() {
         Voir tout le parcours
       </Link>
 
-      <div className="space-y-2.5">
-        {modes.map(({ id, icon: Icon, title, description, to }, i) => (
-          <Link
-            key={id}
-            to={to}
-            className="animate-rise flex min-h-16 items-center gap-3 rounded-2xl border border-navy-100 bg-white p-4 shadow-[var(--shadow-card)] transition-transform active:scale-[0.99]"
-            style={{ animationDelay: `${i * 40}ms` }}
-          >
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-700">
-              <Icon aria-hidden="true" className="size-5" />
-            </span>
-            <span className="flex-1">
-              <span className="block text-[15px] font-bold text-navy-900">{title}</span>
-              <span className="block text-sm text-ink-400">{description}</span>
-            </span>
-            <ArrowRight aria-hidden="true" className="size-4 shrink-0 text-navy-300" />
-          </Link>
-        ))}
+      <div className="space-y-3">
+        {modes.map(({ id, icon: Icon, title, description, to }, i) => {
+          const p = progressByMode[id]
+          const pct = Math.round(p.progress * 100)
+          const barColor = p.done ? 'bg-mint-500' : p.started ? 'bg-amber-500' : 'bg-navy-100'
+          return (
+            <Link
+              key={id}
+              to={to}
+              aria-label={`${title}. ${description} ${modeStateLabel(p.started, p.done)}. ${p.detail}.`}
+              className="animate-rise flex flex-col gap-3 rounded-2xl border border-navy-100 bg-white p-4 shadow-[var(--shadow-card)] transition-transform active:scale-[0.99]"
+              style={{ animationDelay: `${i * 40}ms` }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-700">
+                  <Icon aria-hidden="true" className="size-5" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[15px] font-bold text-navy-900">{title}</span>
+                  <span className="block text-sm text-ink-400">{description}</span>
+                </span>
+                <ArrowRight aria-hidden="true" className="size-4 shrink-0 text-navy-300" />
+              </div>
+              <div aria-hidden="true" className="flex items-center gap-2.5">
+                <div className="min-w-0 flex-1">
+                  <ProgressBar value={pct} max={100} colorClassName={barColor} trackClassName="bg-navy-50" />
+                </div>
+                <ModeStatusPill started={p.started} done={p.done} />
+              </div>
+              <p aria-hidden="true" className="text-xs text-ink-400">{p.detail}</p>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )

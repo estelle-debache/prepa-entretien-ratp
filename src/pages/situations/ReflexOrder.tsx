@@ -5,11 +5,13 @@ import { checkOrder, REFLEX_NOTE, shuffledReflexes } from '../../lib/practice/re
 import { reportActivityDone } from '../../lib/practice/activity'
 import { Button, Card } from '../../ui/primitives'
 import { frenchNbsp } from '../../ui/format'
+import { useReflexState } from '../../ui/hooks'
 
 export default function ReflexOrder() {
   const [pool, setPool] = useState<string[]>(() => shuffledReflexes())
   const [selected, setSelected] = useState<string[]>([])
   const [result, setResult] = useState<{ correct: boolean; positions: boolean[] } | null>(null)
+  const [, setReflexState] = useReflexState()
 
   const pick = (step: string) => {
     if (result) return
@@ -22,7 +24,16 @@ export default function ReflexOrder() {
     setSelected((s) => s.slice(0, -1))
     setPool((p) => [...p, last])
   }
-  const verify = () => { setResult(checkOrder(selected)); reportActivityDone({ kind: 'reflex' }) }
+  const verify = () => {
+    const outcome = checkOrder(selected)
+    setResult(outcome)
+    setReflexState((previous) => ({
+      attempts: previous.attempts + 1,
+      successes: previous.successes + (outcome.correct ? 1 : 0),
+      lastAt: Date.now(),
+    }))
+    reportActivityDone({ kind: 'reflex' })
+  }
   const restart = () => {
     setPool(shuffledReflexes())
     setSelected([])
