@@ -999,7 +999,7 @@ export const BANK_QUESTIONS: BankQuestion[] = [
       ]
     ],
     "hook": [
-      "Je prépare la veille pour être reposé et arriver à l'heure."
+      "Je prépare mes affaires la veille, j'adapte mon heure de coucher en fonction de mon heure de réveil pour être bien reposé et arriver à l'heure."
     ],
     "targetSeconds": [
       15,
