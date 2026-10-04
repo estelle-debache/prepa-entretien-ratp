@@ -11,9 +11,9 @@ describe('personalisation du texte', () => {
     expect(missingFields([rich, rich], {})).toEqual(['prenom', 'stageLieu'])
   })
   it('inclut les conditions vraies seulement', () => {
-    const rich = [{ ifField: 'cfaVerifie' as const, text: 'Vérifié' }]
-    expect(resolveRichText(rich, { cfaVerifie: 'OUI' })).toEqual([{ kind: 'text', text: 'Vérifié' }])
-    expect(resolveRichText(rich, { cfaVerifie: 'non' })).toEqual([])
+    const rich = [{ ifField: 'conduiteAccompagnee' as const, text: 'Vérifié' }]
+    expect(resolveRichText(rich, { conduiteAccompagnee: 'OUI' })).toEqual([{ kind: 'text', text: 'Vérifié' }])
+    expect(resolveRichText(rich, { conduiteAccompagnee: 'non' })).toEqual([])
     expect(resolveRichText(rich, {})).toEqual([])
   })
   it('conserve les liens internes', () => {

@@ -24,6 +24,6 @@ export const RECRUITER_QUESTIONS: RecruiterQuestion[] = [
   {
     "id": "R6",
     "text": "J'aurai mes 6 mois de permis en décembre : est-ce bien compatible avec le calendrier de la session ?",
-    "condition": "seulement si le sujet n’a pas été abordé et si tu n’as pas pu vérifier avec le CFA"
+    "condition": "seulement si le sujet n’a pas été abordé"
   }
 ]

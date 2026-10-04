@@ -226,24 +226,14 @@ export const TOP_QUESTIONS: TopQuestion[] = [
         "Volet âge : je suis jeune, mais j'ai déjà eu des responsabilités (planning d'adultes plus âgés que moi, personnes âgées fragiles pendant mon CAP)."
       ],
       [
-        "Volet permis : obtenu en juin 2026, j'aurai mes 6 mois en décembre ",
-        {
-          "link": "/fiche",
-          "text": "ta fiche perso (vérification CFA)"
-        },
-        "."
+        "Volet permis : obtenu en juin 2026, j'aurai mes 6 mois en décembre."
       ],
       [
         "Un permis récent, c'est zéro écart : pas de téléphone, zéro alcool, mes 6 points à protéger."
       ]
     ],
     "example": [
-      "C'est normal que vous posiez la question. J'ai 18 ans, mais j'ai déjà eu des responsabilités : j'organisais le travail de chauffeurs plus âgés que moi, et pendant mon CAP, je m'occupais de personnes âgées fragiles. Je ne confonds pas mon permis B avec le fait de savoir conduire un bus : c'est justement ce que je viens apprendre. Pour le permis, je l'ai depuis juin 2026, donc j'aurai mes six mois en décembre. ",
-      {
-        "ifField": "cfaVerifie",
-        "text": "J'ai vérifié avec le CFA que c'est compatible avec ma session."
-      },
-      " Et un permis récent, pour moi, c'est zéro écart : pas de téléphone au volant, zéro alcool, et mes points à protéger."
+      "C'est normal que vous posiez la question. J'ai 18 ans, mais j'ai déjà eu des responsabilités : j'organisais le travail de chauffeurs plus âgés que moi, et pendant mon CAP, je m'occupais de personnes âgées fragiles. Je ne confonds pas mon permis B avec le fait de savoir conduire un bus : c'est justement ce que je viens apprendre. Pour le permis, je l'ai depuis juin 2026, donc j'aurai mes six mois en décembre. Et un permis récent, pour moi, c'est zéro écart : pas de téléphone au volant, zéro alcool, et mes points à protéger."
     ],
     "avoid": [
       "t'excuser d'être jeune ; dire « je suis mature » (montre-le plutôt) ; aborder le sujet du permis avant qu'on te le demande ; parler de décret ou de règles techniques."
@@ -305,11 +295,6 @@ export const TOP_QUESTIONS: TopQuestion[] = [
       {
         "field": "transport5h",
         "hint": "ton moyen de transport"
-      },
-      ", avec un trajet d'environ ",
-      {
-        "field": "trajetDuree",
-        "hint": "durée du trajet"
       },
       ". Je sais qu'à cette heure-là, les transports en commun ne suffisent pas toujours, donc j'ai prévu ma solution. En plus, je prévois de m'installer à Sucy-en-Brie, plus près des centres bus du Val-de-Marne. C'est un projet, mais ma disponibilité ne dépend pas de ce déménagement. Il peut y avoir des prises tôt, des fins tardives, des week-ends et des jours fériés. Je m'organiserai pour être à l'heure et garder un rythme compatible avec la sécurité."
     ],

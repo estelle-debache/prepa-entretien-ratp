@@ -2,7 +2,6 @@
 
 export type OneOffId =
   | 'fiche'
-  | 'cfa'
   | 'ecran-accueil'
   | 'lire-ratp'
   | 'lire-metier'
@@ -27,12 +26,6 @@ export const ONE_OFF_TASKS: OneOffTask[] = [
     detail: 'Tes vraies infos remplacent les passages « à compléter » dans les réponses.',
     link: '/fiche',
     auto: true,
-  },
-  {
-    id: 'cfa',
-    title: 'Appeler le CFA',
-    detail: 'Un jour de semaine : demande la date de ta session et à quel moment les 6 mois de permis sont comptés. Note la réponse dans ta fiche.',
-    link: '/fiche',
   },
   {
     id: 'ecran-accueil',

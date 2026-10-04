@@ -6,7 +6,7 @@ export const PROFILE_GROUPS: ProfileGroup[] = [
   { id: 'experience', title: 'Ton expérience au planning', intro: 'Dis toujours la vérité sur ton statut : le recruteur peut te le demander.' },
   { id: 'permis', title: 'Ton permis et ta conduite' },
   { id: 'trajet', title: 'Venir au centre bus à 5 h', intro: 'Prévois une solution qui marche dès aujourd’hui, sans attendre un déménagement.' },
-  { id: 'cfa', title: 'Le CFA', intro: 'Appelle le CFA lundi : date de ta session, et à quel moment les 6 mois de permis sont comptés.' },
+  { id: 'cfa', title: 'Le CFA' },
   { id: 'exemples', title: 'Toi, en exemples', intro: 'Une qualité sans exemple ne compte pas. Écris des faits vrais, en 2 ou 3 phrases.' },
 ]
 
@@ -61,11 +61,7 @@ export const PROFILE_FIELDS: ProfileField[] = [
   },
 
   { id: 'transport5h', group: 'trajet', label: 'Comment tu viens au centre bus pour 5 h ?', help: 'Complète la phrase « Je peux venir au centre bus à 5 h … ».', type: 'text', placeholder: 'ex. en voiture, avec ma propre voiture' },
-  { id: 'trajetDuree', group: 'trajet', label: 'Durée du trajet', type: 'text', placeholder: 'ex. 30 minutes' },
 
-  { id: 'sessionDate', group: 'cfa', label: 'Date de début de ta session', type: 'date' },
-  { id: 'cfaVerifie', group: 'cfa', label: 'As-tu vérifié avec le CFA pour les 6 mois de permis ?', type: 'yesno' },
-  { id: 'cfaReponse', group: 'cfa', label: 'Ce que le CFA t’a répondu', type: 'textarea' },
   { id: 'sourceCFA', group: 'cfa', label: 'Comment as-tu connu le CFA et cette formation ?', type: 'text', placeholder: 'ex. France Travail' },
 
   { id: 'qualite1', group: 'exemples', label: 'Qualité n° 1', type: 'text', placeholder: 'ex. ponctuel' },

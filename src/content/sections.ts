@@ -50,19 +50,6 @@ export const SECTIONS: Section[] = [
         "text": [
           "Environ 60 % de l'entretien porte sur l'attitude et 40 % sur les connaissances. On ne te demande pas d'être une encyclopédie."
         ]
-      },
-      {
-        "type": "callout",
-        "tone": "warning",
-        "title": "Avant l'entretien : appelle le CFA",
-        "text": [
-          "Demande la date de début de ta session. Demande à quel moment les 6 mois de permis sont comptés : à la signature du contrat ou au début de la formation ? Demande si ton dossier a été validé en connaissant la date de ton permis. Note la réponse dans ",
-          {
-            "link": "/fiche",
-            "text": "ta fiche (rubrique « Le CFA »)"
-          },
-          "."
-        ]
       }
     ]
   },

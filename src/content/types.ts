@@ -27,11 +27,7 @@ export type ProfileFieldId =
   | 'pratiqueConduite'
   // Venir à 5 h
   | 'transport5h'
-  | 'trajetDuree'
   // CFA
-  | 'sessionDate'
-  | 'cfaVerifie'
-  | 'cfaReponse'
   | 'sourceCFA'
   // Toi, en exemples
   | 'qualite1'
