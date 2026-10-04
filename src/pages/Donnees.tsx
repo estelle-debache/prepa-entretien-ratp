@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import { CheckCircle2, Clipboard, ClipboardPaste, Lock, Trash2, TriangleAlert, Volume2 } from 'lucide-react'
 import { exportAll, importAll, clearAll } from '../lib/store'
+import { useSyncStatus } from '../lib/sync'
 import { Button, Callout, Card, Switch } from '../ui/primitives'
+import { SyncSection } from '../ui/SyncSection'
+import { copyText } from '../ui/clipboard'
 import { useReglages } from '../ui/hooks'
 import { frenchNbsp } from '../ui/format'
 
 export default function Donnees() {
   const [reglages, setReglages] = useReglages()
+  const syncStatus = useSyncStatus()
+  const syncActive = syncStatus.status !== 'disabled'
   const [pasteValue, setPasteValue] = useState('')
   const [copyState, setCopyState] = useState<'idle' | 'done' | 'error'>('idle')
   const [restoreState, setRestoreState] = useState<'idle' | 'done' | 'error'>('idle')
@@ -15,26 +20,7 @@ export default function Donnees() {
   const [erased, setErased] = useState(false)
 
   const copyBackup = async () => {
-    const data = exportAll()
-    try {
-      await navigator.clipboard.writeText(data)
-      setCopyState('done')
-    } catch {
-      try {
-        const area = document.createElement('textarea')
-        area.value = data
-        area.style.position = 'fixed'
-        area.style.opacity = '0'
-        document.body.appendChild(area)
-        area.focus()
-        area.select()
-        document.execCommand('copy')
-        document.body.removeChild(area)
-        setCopyState('done')
-      } catch {
-        setCopyState('error')
-      }
-    }
+    setCopyState((await copyText(exportAll())) ? 'done' : 'error')
     setTimeout(() => setCopyState('idle'), 2500)
   }
 
@@ -57,6 +43,10 @@ export default function Donnees() {
     setTimeout(() => setErased(false), 2500)
   }
 
+  const eraseDescription = syncActive
+    ? 'Supprime ta fiche, tes statuts de questions, ton parcours et tes réglages de ce téléphone. La copie en ligne n’est pas supprimée : utilise « Supprimer mes données en ligne » plus haut.'
+    : 'Supprime ta fiche, tes statuts de questions, ton parcours et tes réglages de ce téléphone.'
+
   return (
     <div className="space-y-5">
       <header className="animate-rise space-y-1">
@@ -64,10 +54,22 @@ export default function Donnees() {
       </header>
 
       <Callout tone="success" className="animate-rise">
-        <p className="flex items-start gap-2 text-[15px] font-medium">
-          <Lock aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-          Tout reste sur ce téléphone. Rien n'est envoyé.
-        </p>
+        {syncActive ? (
+          <div className="space-y-1.5 text-[15px] font-medium">
+            <p className="flex items-start gap-2">
+              <Lock aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+              {frenchNbsp(
+                'Tu as activé la synchro : ta fiche et ta progression sont envoyées à ton espace de sauvegarde (Supabase, serveur en Europe). Jamais tes enregistrements audio.',
+              )}
+            </p>
+            <p className="pl-6 text-[13px] text-mint-700">{frenchNbsp('Ce code est comme un mot de passe : ne le partage pas.')}</p>
+          </div>
+        ) : (
+          <p className="flex items-start gap-2 text-[15px] font-medium">
+            <Lock aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+            Tout reste sur ce téléphone. Rien n'est envoyé.
+          </p>
+        )}
       </Callout>
 
       <Card className="animate-rise space-y-3" style={{ animationDelay: '40ms' }}>
@@ -79,6 +81,8 @@ export default function Donnees() {
           className="min-h-11 w-full rounded-xl border-2 border-navy-100 bg-white px-3.5 text-base text-ink-900 focus:border-mint-500"
         />
       </Card>
+
+      <SyncSection style={{ animationDelay: '55ms' }} />
 
       <Card className="animate-rise flex items-center justify-between gap-3" style={{ animationDelay: '70ms' }}>
         <div className="flex items-start gap-2.5">
@@ -94,7 +98,7 @@ export default function Donnees() {
       <Card className="animate-rise space-y-3" style={{ animationDelay: '100ms' }}>
         <h2 className="text-[15px] font-bold text-navy-900">Sauvegarde</h2>
         <p className="text-sm text-ink-600">Copie ta sauvegarde pour la garder, ou la transférer sur un autre appareil.</p>
-        <Button variant="ghost" onClick={copyBackup} className="w-full">
+        <Button variant="ghost" onClick={() => void copyBackup()} className="w-full">
           <Clipboard aria-hidden="true" className="size-4" /> Copier ma sauvegarde
         </Button>
         {copyState === 'done' && <p className="flex items-center gap-1.5 text-sm font-semibold text-mint-700"><CheckCircle2 aria-hidden="true" className="size-4" /> Copié dans le presse-papiers.</p>}
@@ -122,7 +126,7 @@ export default function Donnees() {
 
       <Card className="animate-rise space-y-3 !border-coral-100" style={{ animationDelay: '130ms' }}>
         <h2 className="text-[15px] font-bold text-navy-900">Tout effacer</h2>
-        <p className="text-sm text-ink-600">Supprime ta fiche, tes statuts de questions, ton plan et tes réglages de ce téléphone.</p>
+        <p className="text-sm text-ink-600">{frenchNbsp(eraseDescription)}</p>
         {!confirmErase ? (
           <Button variant="danger" onClick={() => setConfirmErase(true)} className="w-full">
             <Trash2 aria-hidden="true" className="size-4" /> Tout effacer

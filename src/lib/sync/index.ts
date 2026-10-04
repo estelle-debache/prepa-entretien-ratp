@@ -1,0 +1,8 @@
+export { isSyncConfigured } from './config'
+export { CODE_ALPHABET, CODE_LENGTH, formatCode, generateCode, normalizeCode } from './code'
+export { buildPayload, mergeKeys, parsePayload } from './merge'
+export type { MergeResult, SyncPayload } from './merge'
+export { deleteOnlineSave, disableSync, enableNewSync, getSyncCode, joinSync, startSyncEngine, syncNow, useSyncStatus } from './engine'
+export { createSyncEngine } from './engine'
+export type { JoinResult, SyncEngineDependencies, SyncState } from './engine'
+export type { SyncErrorKind } from './client'

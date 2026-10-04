@@ -1,0 +1,22 @@
+/** Copie du texte dans le presse-papiers, avec repli pour les navigateurs/contextes sans l'API Clipboard. */
+export async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch {
+    try {
+      const area = document.createElement('textarea')
+      area.value = text
+      area.style.position = 'fixed'
+      area.style.opacity = '0'
+      document.body.appendChild(area)
+      area.focus()
+      area.select()
+      document.execCommand('copy')
+      document.body.removeChild(area)
+      return true
+    } catch {
+      return false
+    }
+  }
+}

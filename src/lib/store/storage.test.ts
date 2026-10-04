@@ -37,7 +37,7 @@ describe('stockage persistant', () => {
     const backup = exportStorage(source)
     const target = new MemoryStorage()
     target.setItem('other-app', 'keep')
-    expect(importStorage(target, backup)).toEqual({ ok: true })
+    expect(importStorage(target, backup)).toMatchObject({ ok: true })
     expect(readValue(target, 'plan', {})).toEqual({ 'J-4-1': true })
     expect(readValue(target, 'parcours', {})).toEqual({ tour: 2 })
     expect(readValue(target, 'unefois', {})).toEqual({ cfa: true })

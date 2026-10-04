@@ -1,6 +1,9 @@
 import { useCallback, useRef, useSyncExternalStore } from 'react'
 import { DEFAULT_INTERVIEW_DATE, type Profile } from '../../content/types'
-import { clearStorage, exportStorage, importStorage, readValue, storageKey, writeValue, type Reglages, type StoreKey, type StorageLike } from './storage'
+import {
+  applySyncKeysTo, clearStorage, exportStorage, importStorage, readInternalFrom, readSyncKeysFrom, readValue, stampKeys, storageKey,
+  writeInternalTo, writeValue, type InternalName, type Reglages, type StoreKey, type StorageLike, type SyncKeys,
+} from './storage'
 export type { QuestionStatus, Reglages, StoreKey } from './storage'
 export { STORAGE_PREFIX } from './storage'
 
@@ -54,16 +57,63 @@ export function usePersisted<T>(key: StoreKey, defaultValue: T): [T, (value: T |
   const value = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
   const setValue = useCallback((next: T | ((previous: T) => T)) => {
     const resolved = typeof next === 'function' ? (next as (previous: T) => T)(readValue(storage(), key, fallbackRef.current)) : next
-    writeValue(storage(), key, resolved); notify(key)
+    if (writeValue(storage(), key, resolved)) stampKeys(storage(), [key])
+    notify(key)
+    emitLocalWrite(key)
   }, [key])
   return [value, setValue]
 }
 
 export function exportAll(): string { return exportStorage(storage()) }
 export function importAll(json: string): { ok: boolean; error?: string } {
-  const result = importStorage(storage(), json)
-  if (result.ok) notify()
+  const { imported = [], ...result } = importStorage(storage(), json)
+  if (result.ok) {
+    stampKeys(storage(), imported)
+    notify()
+    imported.forEach(emitLocalWrite)
+  }
   return result
 }
-export function clearAll(): void { clearStorage(storage()); notify() }
+export function clearAll(): void { clearStorage(storage()); notify(); emitCleared() }
 export { storageKey }
+
+/* ------------------------------------------------------------------ */
+/* Synchronisation entre appareils (contrat : travail/sync-contrat.md §1) */
+/* ------------------------------------------------------------------ */
+
+export type { SyncEntry, SyncKeys } from './storage'
+
+const localWriteListeners = new Set<(key: StoreKey) => void>()
+const clearedListeners = new Set<() => void>()
+function emitLocalWrite(key: StoreKey) { localWriteListeners.forEach((listener) => { try { listener(key) } catch { /* ignore */ } }) }
+function emitCleared() { clearedListeners.forEach((listener) => { try { listener() } catch { /* ignore */ } }) }
+
+/** Appelé après chaque écriture faite par l'utilisateur (pas après une écriture venue de la synchro). */
+export function subscribeLocalWrites(listener: (key: StoreKey) => void): () => void {
+  localWriteListeners.add(listener)
+  return () => { localWriteListeners.delete(listener) }
+}
+
+/** Appelé après « Tout effacer » (la synchro de cet appareil est alors désactivée). */
+export function subscribeCleared(listener: () => void): () => void {
+  clearedListeners.add(listener)
+  return () => { clearedListeners.delete(listener) }
+}
+
+/** Toutes les clés présentes en local, avec leur horodatage (0 = jamais horodatée). */
+export function readSyncKeys(): SyncKeys { return readSyncKeysFrom(storage()) }
+
+/** Écrit des entrées venues d'un autre appareil et rafraîchit les écrans concernés (sans déclencher d'envoi). */
+export function applyRemoteKeys(keys: SyncKeys): StoreKey[] {
+  const written = applySyncKeysTo(storage(), keys)
+  written.forEach((key) => notify(key))
+  return written
+}
+
+/** Horodate toutes les clés présentes (création d'un code : cet appareil fait référence). */
+export function stampAllKeys(now: number = Date.now()): void {
+  stampKeys(storage(), Object.keys(readSyncKeysFrom(storage())) as StoreKey[], now)
+}
+
+export function readInternal<T>(name: InternalName, fallback: T): T { return readInternalFrom(storage(), name, fallback) }
+export function writeInternal(name: InternalName, value: unknown): void { writeInternalTo(storage(), name, value) }

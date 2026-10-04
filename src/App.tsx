@@ -5,6 +5,7 @@ import Parcours from './pages/Parcours'
 import Fiche from './pages/Fiche'
 import Memo from './pages/Memo'
 import Donnees from './pages/Donnees'
+import SyncJoin from './pages/SyncJoin'
 import NotFound from './pages/NotFound'
 import ReviserList from './pages/reviser/ReviserList'
 import ReviserSection from './pages/reviser/ReviserSection'
@@ -37,6 +38,7 @@ function App() {
         <Route path="/fiche" element={<Fiche />} />
         <Route path="/memo" element={<Memo />} />
         <Route path="/donnees" element={<Donnees />} />
+        <Route path="/sync/:code" element={<SyncJoin />} />
 
         <Route path="/entrainement" element={<Hub />} />
         <Route path="/entrainement/oral/:id" element={<Oral />} />

@@ -1,8 +1,10 @@
 import { CheckCircle2, Lock } from 'lucide-react'
 import { PROFILE_FIELDS, PROFILE_GROUPS } from '../content/profileFields'
 import type { ProfileField } from '../content/types'
+import { useSyncStatus } from '../lib/sync'
 import { Card, Disclosure, ProgressBar, SelectButtons, YesNoToggle } from '../ui/primitives'
 import { profileCompletion, useFlash, useProfile } from '../ui/hooks'
+import { frenchNbsp } from '../ui/format'
 
 /**
  * `yesno`/`select` sont des groupes de boutons (pas de contrôle natif unique) : on les relie au
@@ -54,6 +56,7 @@ export default function Fiche() {
   const [profile, setProfile] = useProfile()
   const [saved, flashSaved] = useFlash()
   const completion = profileCompletion(profile)
+  const syncActive = useSyncStatus().status !== 'disabled'
 
   const update = (id: ProfileField['id'], value: string) => {
     setProfile((prev) => ({ ...prev, [id]: value }))
@@ -66,7 +69,9 @@ export default function Fiche() {
         <h1 className="text-2xl font-extrabold tracking-tight text-navy-900">Ma fiche</h1>
         <p className="flex items-start gap-2 rounded-2xl bg-navy-50 p-3 text-sm font-medium text-navy-700">
           <Lock aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-          Rien n'est envoyé nulle part : tout reste enregistré sur ton téléphone, et sert à personnaliser tes réponses dans Questions et le Mémo.
+          {syncActive
+            ? frenchNbsp('Enregistré sur ton téléphone, et sert à personnaliser tes réponses dans Questions et le Mémo. Comme tu as activé la synchro (Tes données), c’est aussi envoyé à ton espace de sauvegarde (Supabase, serveur en Europe).')
+            : "Rien n'est envoyé nulle part : tout reste enregistré sur ton téléphone, et sert à personnaliser tes réponses dans Questions et le Mémo."}
         </p>
       </header>
 

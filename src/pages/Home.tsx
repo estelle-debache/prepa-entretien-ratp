@@ -1,5 +1,6 @@
-import { Link, useNavigate } from 'react-router'
-import { ArrowRight, CalendarDays, Check, ChevronRight, FileText, Footprints, PartyPopper, Repeat, Sparkles, UserRound, type LucideIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router'
+import { ArrowRight, CalendarDays, Check, ChevronRight, CloudCheck, FileText, Footprints, PartyPopper, Repeat, Sparkles, UserRound, X, type LucideIcon } from 'lucide-react'
 import { QUESTIONS } from '../content'
 import { ONE_OFF_TASKS, type OneOffTask } from '../content/oneOff'
 import { isTourFinished, PARCOURS_LENGTH, withParcours } from '../lib/practice/parcours'
@@ -85,6 +86,17 @@ function ShortcutRow({ to, icon: Icon, title, subtitle }: { to: string; icon: Lu
 
 export default function Home() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const [syncMessage, setSyncMessage] = useState<string | null>(null)
+  // Affiché une seule fois (ex. après avoir rejoint une synchro via /sync/:code) : on vide l'état
+  // de navigation tout de suite, pour qu'un rechargement de page ne le fasse pas réapparaître.
+  useEffect(() => {
+    const state = location.state as { syncMessage?: string } | null
+    if (state?.syncMessage) {
+      setSyncMessage(state.syncMessage)
+      navigate(location.pathname, { replace: true, state: null })
+    }
+  }, [location.pathname, location.state, navigate])
   const [profile] = useProfile()
   const [reglages] = useReglages()
   const [statutQuestions] = useStatutQuestions()
@@ -140,6 +152,25 @@ export default function Home() {
       </section>
 
       <div className="space-y-5 px-4 pt-5">
+        {syncMessage ? (
+          <div
+            role="status"
+            aria-live="polite"
+            className="animate-rise flex items-center gap-2.5 rounded-2xl border border-mint-200 bg-mint-50 px-4 py-3"
+          >
+            <CloudCheck aria-hidden="true" className="size-4 shrink-0 text-mint-600" />
+            <p className="flex-1 text-[14px] font-semibold text-mint-800">{frenchNbsp(syncMessage)}</p>
+            <button
+              type="button"
+              onClick={() => setSyncMessage(null)}
+              aria-label="Fermer ce message"
+              className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-mint-600 hover:text-mint-800"
+            >
+              <X aria-hidden="true" className="size-4" />
+            </button>
+          </div>
+        ) : null}
+
         {/* Ta prochaine étape */}
         <Card className="relative animate-rise overflow-hidden !border-mint-200" style={{ animationDelay: '60ms' }}>
           <div aria-hidden="true" className="absolute -right-8 -top-8 size-28 rounded-full bg-mint-50" />
