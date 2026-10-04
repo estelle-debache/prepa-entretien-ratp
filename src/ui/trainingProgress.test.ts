@@ -66,18 +66,28 @@ describe('computeQuizProgress', () => {
   it('vide', () => {
     expect(computeQuizProgress({ wrongIds: [] }, 132)).toEqual({ started: false, done: false, progress: 0, detail: 'Aucun quiz fait pour le moment' })
   })
-  it('avec seenIds et erreurs à revoir', () => {
+  it('partiel : progression = questions réussies, pas encore « fait »', () => {
     const seenIds = Array.from({ length: 40 }, (_, i) => `QZ${i}`)
-    const result = computeQuizProgress({ wrongIds: ['QZ1', 'QZ2', 'QZ3'], seenIds, lastScore: { correct: 8, total: 10 } }, 132)
+    const correctIds = Array.from({ length: 30 }, (_, i) => `QZ${i}`)
+    const result = computeQuizProgress({ wrongIds: ['QZ31', 'QZ32', 'QZ33'], seenIds, correctIds, lastScore: { correct: 8, total: 10 } }, 132)
     expect(result.started).toBe(true)
-    expect(result.progress).toBeCloseTo(40 / 132)
-    expect(result.detail).toBe('40 / 132 questions vues · dernier score 8/10 · 3 erreurs à revoir')
+    expect(result.done).toBe(false)
+    expect(result.progress).toBeCloseTo(30 / 132)
+    expect(result.detail).toBe('30 / 132 questions réussies · dernier score 8/10 · 3 erreurs à revoir')
   })
-  it('sans seenIds (hook pas encore mis à jour) : se rabat sur le dernier score', () => {
-    const result = computeQuizProgress({ wrongIds: [], lastScore: { correct: 7, total: 10 } }, 132)
+  it('un quiz fait avec des erreurs ne compte pas comme « fait »', () => {
+    const result = computeQuizProgress({ wrongIds: ['QZ1'], lastScore: { correct: 9, total: 10 } }, 132)
     expect(result.started).toBe(true)
-    expect(result.progress).toBeCloseTo(0.7)
-    expect(result.detail).toBe('dernier score 7/10')
+    expect(result.done).toBe(false)
+    expect(result.progress).toBe(0)
+  })
+  it('« fait » seulement à 100 % de questions réussies', () => {
+    const correctIds = Array.from({ length: 132 }, (_, i) => `QZ${i}`)
+    const result = computeQuizProgress({ wrongIds: [], correctIds, lastScore: { correct: 10, total: 10 } }, 132)
+    expect(result.done).toBe(true)
+    expect(result.progress).toBe(1)
+    const presque = computeQuizProgress({ wrongIds: [], correctIds: correctIds.slice(1), lastScore: { correct: 10, total: 10 } }, 132)
+    expect(presque.done).toBe(false)
   })
 })
 
@@ -162,7 +172,7 @@ describe('computeTrainingProgress (agrégation)', () => {
       oralHistory: fullHistory,
       amiHistory: fullHistory,
       simulations: [{ at: 1, length: 'complete', mode: 'seul', averages: {}, revisitCount: 0 }],
-      quiz: { wrongIds: [], seenIds: Array.from({ length: 132 }, (_, i) => `QZ${i}`) },
+      quiz: { wrongIds: [], seenIds: Array.from({ length: 132 }, (_, i) => `QZ${i}`), correctIds: Array.from({ length: 132 }, (_, i) => `QZ${i}`) },
       situations: fullSituations,
       reflex: { attempts: 1, successes: 1 },
       statutQuestions: fullStatuts,

@@ -114,18 +114,16 @@ export function computeQuizProgress(quiz: QuizState, totalQuiz: number): Omit<Mo
   const started = seenCount !== undefined ? seenCount > 0 : Boolean(quiz.lastScore)
   if (!started) return { started: false, done: false, progress: 0, detail: 'Aucun quiz fait pour le moment' }
 
-  const progress = seenCount !== undefined
-    ? ratio(seenCount, totalQuiz)
-    : quiz.lastScore
-      ? ratio(quiz.lastScore.correct, quiz.lastScore.total)
-      : 0
+  // « Fait » uniquement à 100 % : toutes les questions de la banque réussies (dernière réponse juste).
+  const correctCount = Math.min(quiz.correctIds?.length ?? 0, totalQuiz)
+  const progress = ratio(correctCount, totalQuiz)
+  const done = totalQuiz > 0 && correctCount >= totalQuiz
 
-  const parts: string[] = []
-  if (seenCount !== undefined) parts.push(`${seenCount} / ${totalQuiz} questions vues`)
+  const parts: string[] = [`${correctCount} / ${totalQuiz} questions réussies`]
   if (quiz.lastScore) parts.push(`dernier score ${quiz.lastScore.correct}/${quiz.lastScore.total}`)
   if (wrongCount > 0) parts.push(`${wrongCount} erreur${wrongCount > 1 ? 's' : ''} à revoir`)
 
-  return { started: true, done: true, progress, detail: parts.join(' · ') }
+  return { started: true, done, progress, detail: parts.join(' · ') }
 }
 
 /* ------------------------------------------------------------------ */

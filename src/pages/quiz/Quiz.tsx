@@ -62,13 +62,22 @@ export default function Quiz() {
       const result = scoreQuiz(items, answers)
       const wrongIds = items.filter((item) => answers[item.id] !== item.answer).map((item) => item.id)
       const seriesIds = items.map((item) => item.id)
-      setQuizState((previous) => ({
-        ...previous,
-        wrongIds,
-        lastScore: { correct: result.correct, total: result.total },
-        lastAt: Date.now(),
-        seenIds: Array.from(new Set([...(previous.seenIds ?? []), ...seriesIds])),
-      }))
+      const rightIds = items.filter((item) => answers[item.id] === item.answer).map((item) => item.id)
+      const knownIds = new Set(QUIZ.map((item) => item.id))
+      setQuizState((previous) => {
+        // Dernière réponse juste → réussie ; dernière réponse fausse → plus réussie.
+        const correct = new Set((previous.correctIds ?? []).filter((id) => knownIds.has(id)))
+        rightIds.forEach((id) => correct.add(id))
+        wrongIds.forEach((id) => correct.delete(id))
+        return {
+          ...previous,
+          wrongIds,
+          lastScore: { correct: result.correct, total: result.total },
+          lastAt: Date.now(),
+          seenIds: Array.from(new Set([...(previous.seenIds ?? []), ...seriesIds])),
+          correctIds: Array.from(correct),
+        }
+      })
       reportActivityDone({ kind: 'quiz' })
       setStage('result')
     } else {

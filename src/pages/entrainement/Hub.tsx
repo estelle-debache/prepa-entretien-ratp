@@ -2,19 +2,17 @@ import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { ArrowRight, Check, FastForward, Gamepad2, ListOrdered, Mic, PartyPopper, Sparkles, Users, Zap, type LucideIcon } from 'lucide-react'
 import { QUESTIONS, SITUATIONS } from '../../content'
-import { QUIZ } from '../../content/quiz/quiz'
 import { quickReviewOrder } from '../../lib/practice/selection'
 import { isTourFinished, withParcours } from '../../lib/practice/parcours'
-import {
-  useAmiHistory, useOralHistory, useReflexState, useSimulationsHistory, useSituationsState, useStatutQuestions, useQuizState,
-} from '../../ui/hooks'
+import { useStatutQuestions } from '../../ui/hooks'
 import { useParcoursEngine } from '../../ui/useParcoursEngine'
 import { goToNextTour } from '../../ui/parcoursActions'
 import { STEP_ICONS } from '../../ui/stepIcons'
 import { frenchNbsp } from '../../ui/format'
 import { ProgressBar } from '../../ui/primitives'
 import { TrainingProgressCard } from '../../ui/TrainingProgressCard'
-import { computeTrainingProgress, type ModeId, type ModeProgress } from '../../ui/trainingProgress'
+import { useTrainingProgress } from '../../ui/useTrainingProgress'
+import type { ModeId, ModeProgress } from '../../ui/trainingProgress'
 
 interface ModeCard { id: ModeId; icon: LucideIcon; title: string; description: string; to: string }
 
@@ -48,25 +46,13 @@ function modeStateLabel(started: boolean, done: boolean): string {
 export default function Hub() {
   const navigate = useNavigate()
   const [statutQuestions] = useStatutQuestions()
-  const [oralHistory] = useOralHistory()
-  const [amiHistory] = useAmiHistory()
-  const [simulations] = useSimulationsHistory()
-  const [quiz] = useQuizState()
-  const [situations] = useSituationsState()
-  const [reflex] = useReflexState()
   const engine = useParcoursEngine()
   const { state, step } = engine
   const finished = isTourFinished(state)
 
   const recommendedId = useMemo(() => quickReviewOrder(QUESTIONS, statutQuestions)[0]?.id ?? 'Q1', [statutQuestions])
 
-  const trainingProgress = useMemo(
-    () => computeTrainingProgress({
-      oralHistory, amiHistory, simulations, quiz, situations, reflex, statutQuestions,
-      totals: { questions: QUESTIONS.length, situations: SITUATIONS.length, quiz: QUIZ.length },
-    }),
-    [oralHistory, amiHistory, simulations, quiz, situations, reflex, statutQuestions],
-  )
+  const trainingProgress = useTrainingProgress()
   const progressByMode = useMemo(
     () => Object.fromEntries(trainingProgress.modes.map((m) => [m.modeId, m])) as Record<ModeId, ModeProgress>,
     [trainingProgress],

@@ -10,6 +10,8 @@ import { useParcoursEngine } from '../ui/useParcoursEngine'
 import { goToNextTour } from '../ui/parcoursActions'
 import { STEP_ICONS } from '../ui/stepIcons'
 import { countdownLabel, formatPercent, frenchNbsp } from '../ui/format'
+import { TrainingProgressCard } from '../ui/TrainingProgressCard'
+import { useTrainingProgress } from '../ui/useTrainingProgress'
 
 function OneOffRow({ task, done, onToggle }: { task: OneOffTask; done: boolean; onToggle?: () => void }) {
   return (
@@ -102,6 +104,7 @@ export default function Home() {
   const [statutQuestions] = useStatutQuestions()
   const [uneFois, setUneFois] = useUneFois()
   const [history] = useSimulationsHistory()
+  const trainingProgress = useTrainingProgress()
   const engine = useParcoursEngine()
   const { state, step } = engine
   const finished = isTourFinished(state)
@@ -217,8 +220,17 @@ export default function Home() {
           </Link>
         </Card>
 
+        {/* Progression de l'entraînement */}
+        <TrainingProgressCard
+          global={trainingProgress.global}
+          modes={trainingProgress.modes}
+          to="/entrainement"
+          className="animate-rise"
+          style={{ animationDelay: '110ms' }}
+        />
+
         {/* À faire une fois */}
-        <Card className="animate-rise" style={{ animationDelay: '110ms' }}>
+        <Card className="animate-rise" style={{ animationDelay: '160ms' }}>
           <div className="flex items-start justify-between gap-3">
             <h2 className="text-lg font-bold text-navy-900">À faire une fois</h2>
             <span className="shrink-0 rounded-full bg-navy-50 px-2.5 py-1 text-xs font-bold text-navy-700">
@@ -238,7 +250,7 @@ export default function Home() {
         </Card>
 
         {/* Progression */}
-        <div className="animate-rise grid grid-cols-2 gap-3" style={{ animationDelay: '160ms' }}>
+        <div className="animate-rise grid grid-cols-2 gap-3" style={{ animationDelay: '210ms' }}>
           <LoopStat icon={Repeat} label="Tour en cours" value={`Tour ${state.tour}`} />
           <LoopStat icon={Footprints} label="Étapes faites" value={String(state.totalDone)} />
           <StatTile icon={Check} label="Questions sues" value={`${masteredCount}/${QUESTIONS.length}`} progress={(masteredCount / QUESTIONS.length) * 100} />
@@ -246,7 +258,7 @@ export default function Home() {
         </div>
 
         {/* Raccourcis */}
-        <div className="animate-rise space-y-2.5" style={{ animationDelay: '210ms' }}>
+        <div className="animate-rise space-y-2.5" style={{ animationDelay: '260ms' }}>
           <ShortcutRow to="/memo" icon={FileText} title="Mémo" subtitle="L'essentiel sur une page" />
           <ShortcutRow to="/questions?star=1" icon={Sparkles} title="Questions ★" subtitle="Les 5 questions prioritaires" />
           <ShortcutRow to="/fiche" icon={UserRound} title="Ma fiche" subtitle="Personnalise tes réponses" />

@@ -67,6 +67,8 @@ export interface QuizState {
   lastAt?: number
   /** Questions déjà répondues au moins une fois (toutes séries confondues). */
   seenIds?: string[]
+  /** Questions dont la DERNIÈRE réponse était juste (une erreur la retire). Quiz « fait » quand toutes y sont. */
+  correctIds?: string[]
 }
 
 export function useQuizState() {
