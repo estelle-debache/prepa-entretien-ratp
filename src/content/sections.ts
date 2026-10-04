@@ -286,6 +286,27 @@ export const SECTIONS: Section[] = [
       },
       {
         "type": "h",
+        "text": "Le bus en chiffres (ordre de grandeur)"
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            "Bus standard : environ 12 m de long, 2,55 m de large (la largeur maximale autorisée) et un peu plus de 3 m de haut ; une centaine de voyageurs."
+          ],
+          [
+            "Bus articulé : environ 18 m de long (18,75 m au maximum)."
+          ],
+          [
+            "Poids : environ 11 à 14 tonnes à vide selon le modèle (un bus électrique est plus lourd, à cause des batteries), et jusqu'à 19 tonnes chargé (poids total autorisé d'un bus à 2 essieux)."
+          ],
+          [
+            "Pourquoi c'est utile : un véhicule long et lourd freine plus loin, prend plus de place dans les virages et a des angles morts. D'où l'anticipation."
+          ]
+        ]
+      },
+      {
+        "type": "h",
         "text": "Les règles à connaître"
       },
       {

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { ArrowRight, FastForward, Gamepad2, ListOrdered, Mic, PartyPopper, Sparkles, Users, Zap, type LucideIcon } from 'lucide-react'
-import { QUESTIONS } from '../../content'
+import { QUESTIONS, SITUATIONS } from '../../content'
 import { quickReviewOrder } from '../../lib/practice/selection'
 import { isTourFinished, withParcours } from '../../lib/practice/parcours'
 import { useStatutQuestions } from '../../ui/hooks'
@@ -26,7 +26,7 @@ export default function Hub() {
     { id: 'ami', icon: Users, title: 'Avec un ami', description: 'Ton ami pose la question et coche ta grille.', to: `/entrainement/ami/${recommendedId}` },
     { id: 'simulation', icon: Gamepad2, title: "Simulation d'entretien", description: 'Un entretien complet, seul ou avec un ami.', to: '/simulation' },
     { id: 'quiz', icon: Zap, title: 'Quiz', description: 'Des questions rapides sur la RATP, le métier et les règles.', to: '/quiz' },
-    { id: 'situations', icon: Sparkles, title: 'Mises en situation', description: '« Que fais-tu ? » sur les 12 situations possibles.', to: '/situations' },
+    { id: 'situations', icon: Sparkles, title: 'Mises en situation', description: `« Que fais-tu ? » sur les ${SITUATIONS.length} situations possibles.`, to: '/situations' },
     { id: 'reflex', icon: ListOrdered, title: 'Exercice des réflexes', description: 'Remets les 5 réflexes dans le bon ordre.', to: '/situations/ordre' },
     { id: 'revision', icon: FastForward, title: 'Révision rapide', description: 'Enchaîne les questions, sans chrono ni micro.', to: '/revision-rapide' },
   ]

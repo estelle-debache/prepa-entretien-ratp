@@ -91,7 +91,7 @@ export default function QuestionsList() {
         ))}
       </div>
 
-      <p className="animate-rise text-sm font-semibold text-ink-400" style={{ animationDelay: '90ms' }}>{total} question{total === 1 ? '' : 's'} sur 45</p>
+      <p className="animate-rise text-sm font-semibold text-ink-400" style={{ animationDelay: '90ms' }}>{total} question{total === 1 ? '' : 's'} sur {BANK_QUESTIONS.length + TOP_QUESTIONS.length}</p>
 
       {filteredTop.length > 0 && (
         <section className="animate-rise space-y-2" style={{ animationDelay: '110ms' }}>

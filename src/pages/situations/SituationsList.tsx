@@ -8,7 +8,7 @@ export default function SituationsList() {
     <div className="space-y-5">
       <header className="animate-rise space-y-1">
         <h1 className="text-2xl font-extrabold tracking-tight text-navy-900">Mises en situation</h1>
-        <p className="text-[15px] text-ink-600">12 situations possibles le jour de l'entretien. Lis-les, puis entraîne-toi en jeu de rôle.</p>
+        <p className="text-[15px] text-ink-600">{SITUATIONS.length} situations possibles le jour de l'entretien. Lis-les, puis entraîne-toi en jeu de rôle.</p>
       </header>
 
       <Card className="!p-0 overflow-hidden">

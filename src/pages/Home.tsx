@@ -241,7 +241,7 @@ export default function Home() {
         <div className="animate-rise grid grid-cols-2 gap-3" style={{ animationDelay: '160ms' }}>
           <LoopStat icon={Repeat} label="Tour en cours" value={`Tour ${state.tour}`} />
           <LoopStat icon={Footprints} label="Étapes faites" value={String(state.totalDone)} />
-          <StatTile icon={Check} label="Questions sues" value={`${masteredCount}/45`} progress={(masteredCount / 45) * 100} />
+          <StatTile icon={Check} label="Questions sues" value={`${masteredCount}/${QUESTIONS.length}`} progress={(masteredCount / QUESTIONS.length) * 100} />
           <StatTile icon={UserRound} label="Fiche remplie" value={formatPercent(completion)} progress={completion} />
         </div>
 

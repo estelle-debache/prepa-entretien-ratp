@@ -21,7 +21,7 @@ function targetFor(index: number, tour: number, ctx: ResolveContext): string | u
       if (activity.questionId !== 'priority') return activity.questionId
       return quickReviewOrder(QUESTIONS, ctx.statuses, mulberry32(tour)).find(q => !['Q1', 'Q2', 'Q7', 'Q9', 'Q13'].includes(q.id))?.id ?? 'Q4'
     case 'quiz': return tour >= 2 && ctx.quizWrongCount >= 3 ? 'erreurs' : 'serie'
-    case 'situation': return `S${(((tour - 1) * 3 + activity.slot) % 12) + 1}`
+    case 'situation': return `S${(((tour - 1) * 3 + activity.slot) % SITUATIONS.length) + 1}`
     case 'roleplay': return `JR${((tour - 1) % 3) + 1}`
     default: return undefined
   }

@@ -16,13 +16,13 @@ const values = (x: unknown): unknown[] => Array.isArray(x) ? x.flatMap(values) :
 const serialized = JSON.stringify(exportsToScan)
 const links = values(exportsToScan).filter((x): x is string => typeof x === 'string').flatMap(s => [...s.matchAll(/\{link:([^}]+)\}/g)].map(m => m[1]))
 const contentLinks = [...serialized.matchAll(/"link":"([^"]+)"|"link":"([^\"]+)"/g)].map(m => m[1] ?? m[2])
-const validRoutes = [/^\/$/, /^\/fiche$/, /^\/reviser$/, /^\/reviser\/(mode-emploi|evaluation|deroule|ratp|metier|recruteur|erreurs|checklist)$/, /^\/questions$/, /^\/questions\/(Q[1-9]|Q1[0-5]|B([1-9]|[12][0-9]|30))$/, /^\/memo$/, /^\/donnees$/, /^\/entrainement$/, /^\/entrainement\/oral\/[^/]+$/, /^\/entrainement\/ami\/[^/]+$/, /^\/simulation$/, /^\/quiz$/, /^\/situations$/, /^\/situations\/ordre$/, /^\/situations\/S(1[0-2]|[1-9])$/, /^\/jeux-de-role\/JR[1-3]$/, /^\/revision-rapide$/]
+const validRoutes = [/^\/$/, /^\/fiche$/, /^\/reviser$/, /^\/reviser\/(mode-emploi|evaluation|deroule|ratp|metier|recruteur|erreurs|checklist)$/, /^\/questions$/, /^\/questions\/(Q[1-9]|Q1[0-5]|B([1-9]|[12][0-9]|3[0-6]))$/, /^\/memo$/, /^\/donnees$/, /^\/entrainement$/, /^\/entrainement\/oral\/[^/]+$/, /^\/entrainement\/ami\/[^/]+$/, /^\/simulation$/, /^\/quiz$/, /^\/situations$/, /^\/situations\/ordre$/, /^\/situations\/S(1[0-3]|[1-9])$/, /^\/jeux-de-role\/JR[1-3]$/, /^\/revision-rapide$/]
 
 describe('contenu éditorial', () => {
   it('contient tous les volumes attendus', () => {
     expect(TOP_QUESTIONS).toHaveLength(15)
-    expect(BANK_QUESTIONS).toHaveLength(30)
-    expect(SITUATIONS).toHaveLength(12)
+    expect(BANK_QUESTIONS).toHaveLength(36)
+    expect(SITUATIONS).toHaveLength(13)
     expect(ROLE_PLAYS).toHaveLength(3)
     expect(FACTS).toHaveLength(8)
     expect(EXTRAS).toHaveLength(7)
@@ -30,7 +30,7 @@ describe('contenu éditorial', () => {
     expect(RECRUITER_QUESTIONS).toHaveLength(6)
     expect(MISTAKES).toHaveLength(11)
     expect(CHECKLIST).toHaveLength(4)
-    expect(QUESTIONS).toHaveLength(45)
+    expect(QUESTIONS).toHaveLength(51)
     expect(THEMES).toHaveLength(7)
     expect(SECTIONS).toHaveLength(9)
   })

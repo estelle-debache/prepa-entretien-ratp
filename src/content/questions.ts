@@ -68,7 +68,7 @@ export const TOP_QUESTIONS: TopQuestion[] = [
     "kind": "top",
     "star": true,
     "theme": "presentation",
-    "question": "Pourquoi voulez-vous devenir conducteur de bus ?",
+    "question": "Pourquoi voulez-vous devenir conducteur de bus plutôt qu'un autre métier ?",
     "checks": "une motivation réfléchie, liée au contact humain et à la sécurité.",
     "ideas": [
       [
@@ -161,7 +161,7 @@ export const TOP_QUESTIONS: TopQuestion[] = [
     "kind": "top",
     "star": false,
     "theme": "metier",
-    "question": "En quoi consiste le métier ? Décrivez une journée type.",
+    "question": "Que connaissez-vous du métier ? Décrivez une journée type.",
     "checks": "que je comprends le travail au-delà de la conduite.",
     "ideas": [
       [
@@ -190,7 +190,7 @@ export const TOP_QUESTIONS: TopQuestion[] = [
     "kind": "top",
     "star": false,
     "theme": "metier",
-    "question": "Selon vous, quelle est la qualité n°1 d'un conducteur de bus ?",
+    "question": "Pour vous, qu'est-ce qu'un bon conducteur de bus ? Quelle est sa qualité n°1 ?",
     "checks": "que la sécurité est ma priorité.",
     "ideas": [
       [
@@ -594,7 +594,7 @@ export const BANK_QUESTIONS: BankQuestion[] = [
     "kind": "bank",
     "theme": "presentation",
     "group": "Parcours & motivation",
-    "question": "Où vous voyez-vous dans 5 ans ?",
+    "question": "Où vous voyez-vous dans 5 ans ? Et dans 10 ans ?",
     "ideas": [
       [
         "conducteur confirmé"
@@ -603,7 +603,7 @@ export const BANK_QUESTIONS: BankQuestion[] = [
         "continuer à apprendre"
       ],
       [
-        "peut-être formateur ou régulation plus tard"
+        "dans 10 ans : pourquoi pas formateur, régulation ou encadrement, grâce à mon expérience du planning"
       ]
     ],
     "hook": [
@@ -1026,7 +1026,7 @@ export const BANK_QUESTIONS: BankQuestion[] = [
     "kind": "bank",
     "theme": "culture",
     "group": "Culture d'entreprise & équipe",
-    "question": "Votre tuteur vous fait une remarque que vous trouvez injuste. Que faites-vous ?",
+    "question": "Comment réagissez-vous quand on vous fait une remarque, même si vous la trouvez injuste ?",
     "ideas": [
       [
         "écouter sans répondre à chaud"
@@ -1151,7 +1151,7 @@ export const BANK_QUESTIONS: BankQuestion[] = [
     "kind": "bank",
     "theme": "culture",
     "group": "Culture d'entreprise & équipe",
-    "question": "Un collègue vous demande de le couvrir pour un retard.",
+    "question": "Un collègue vous demande de faire quelque chose qui ne respecte pas les règles (par exemple le couvrir pour un retard).",
     "ideas": [
       [
         "ne pas mentir"
@@ -1320,6 +1320,166 @@ export const BANK_QUESTIONS: BankQuestion[] = [
     ],
     "hook": [
       "Je répondrai clairement et honnêtement sur mon dossier."
+    ],
+    "targetSeconds": [
+      15,
+      30
+    ]
+  },
+  {
+    "id": "B31",
+    "kind": "bank",
+    "theme": "presentation",
+    "group": "Parcours & motivation",
+    "question": "Êtes-vous plutôt quelqu'un de calme ou de stressé ?",
+    "ideas": [
+      [
+        "plutôt calme, avec une preuve vécue (personnes âgées fragiles pendant mon CAP)"
+      ],
+      [
+        "reconnaître que le stress existe : ce qui compte, c'est ce que j'en fais"
+      ],
+      [
+        "quand ça monte : je respire, je reste poli et j'applique la consigne"
+      ]
+    ],
+    "hook": [
+      "Plutôt calme. Le stress, ça arrive à tout le monde : moi, je respire, je reste poli et j'applique la consigne."
+    ],
+    "targetSeconds": [
+      15,
+      30
+    ]
+  },
+  {
+    "id": "B32",
+    "kind": "bank",
+    "theme": "contraintes",
+    "group": "Horaires & contraintes",
+    "question": "Êtes-vous ponctuel ?",
+    "ideas": [
+      [
+        "oui, avec une preuve vécue : au planning, un retard pénalise toute l'équipe"
+      ],
+      [
+        "mon organisation : réveil, trajet prévu, toujours de la marge (",
+        {
+          "link": "/fiche",
+          "text": "ta fiche perso (venir à 5 h)"
+        },
+        ")"
+      ],
+      [
+        "en cas d'imprévu : je préviens tout de suite"
+      ]
+    ],
+    "hook": [
+      "Oui. Au planning, j'ai vu ce qu'un retard coûte à toute une équipe : je prévois mon trajet et je pars avec de la marge."
+    ],
+    "targetSeconds": [
+      15,
+      30
+    ]
+  },
+  {
+    "id": "B33",
+    "kind": "bank",
+    "theme": "contraintes",
+    "group": "Horaires & contraintes",
+    "question": "Êtes-vous capable de travailler seul pendant une grande partie de la journée ?",
+    "ideas": [
+      [
+        "oui : seul au volant, mais jamais isolé (PC par radio, collègues au terminus et au centre bus)"
+      ],
+      [
+        "j'aime l'autonomie et la responsabilité"
+      ],
+      [
+        "je suis en contact avec les voyageurs toute la journée"
+      ]
+    ],
+    "hook": [
+      "Oui. Au volant je suis seul, mais pas isolé : le PC est joignable par radio, et je retrouve mes collègues au terminus."
+    ],
+    "targetSeconds": [
+      15,
+      30
+    ]
+  },
+  {
+    "id": "B34",
+    "kind": "bank",
+    "theme": "culture",
+    "group": "Culture d'entreprise & équipe",
+    "question": "Avez-vous déjà eu un conflit avec un collègue ou un responsable ?",
+    "ideas": [
+      [
+        "choisir un exemple vrai et pas trop grave (",
+        {
+          "link": "/fiche",
+          "text": "ta fiche perso (conflit géré)"
+        },
+        ")"
+      ],
+      [
+        "raconter ce que j'ai fait : écouter, en parler calmement, trouver une solution"
+      ],
+      [
+        "ce que j'en ai retenu ; ne jamais critiquer l'autre personne"
+      ]
+    ],
+    "hook": [
+      "Oui, un désaccord. J'ai attendu d'être calme, on en a parlé, et on a trouvé une solution. J'en retiens qu'il faut se parler tôt."
+    ],
+    "targetSeconds": [
+      15,
+      30
+    ]
+  },
+  {
+    "id": "B35",
+    "kind": "bank",
+    "theme": "pieges",
+    "group": "Questions pièges",
+    "question": "Qu'est-ce qui pourrait vous faire abandonner la formation ?",
+    "ideas": [
+      [
+        "montrer que je me suis renseigné : horaires décalés, rythme de la formation, règles strictes"
+      ],
+      [
+        "en cas de difficulté, j'en parle à mon tuteur ou au CFA au lieu d'abandonner"
+      ],
+      [
+        "la seule chose qui m'arrêterait : perdre mon permis, c'est pour ça que j'y fais très attention"
+      ]
+    ],
+    "hook": [
+      "Je me suis renseigné sur les horaires et les règles, et je suis prêt. Si j'ai une difficulté, j'en parlerai à mon tuteur."
+    ],
+    "targetSeconds": [
+      15,
+      30
+    ]
+  },
+  {
+    "id": "B36",
+    "kind": "bank",
+    "theme": "metier",
+    "group": "Métier & formation",
+    "question": "Quelle est la longueur et le poids d'un bus RATP ?",
+    "ideas": [
+      [
+        "bus standard : environ 12 m de long et 2,55 m de large ; un articulé : environ 18 m"
+      ],
+      [
+        "environ 11 à 14 tonnes à vide selon le modèle, jusqu'à 19 tonnes chargé ; une centaine de voyageurs"
+      ],
+      [
+        "pourquoi c'est important : il freine plus loin et prend de la place dans les virages, donc j'anticipe"
+      ]
+    ],
+    "hook": [
+      "Un bus standard fait environ 12 mètres et jusqu'à 19 tonnes chargé. Ça demande beaucoup d'anticipation au freinage et dans les virages."
     ],
     "targetSeconds": [
       15,

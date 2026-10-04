@@ -103,7 +103,7 @@ export const SITUATIONS: Situation[] = [
   {
     "id": "S5",
     "star": false,
-    "title": "Retard de dix minutes ; un voyageur demande à descendre entre deux arrêts",
+    "title": "Retard de dix minutes ; des voyageurs vous pressent d'aller plus vite ou demandent à descendre entre deux arrêts",
     "steps": [
       [
         "Je ne cherche jamais à rattraper le retard en roulant plus vite."
@@ -112,7 +112,7 @@ export const SITUATIONS: Situation[] = [
         "Je préviens le PC du retard et je suis la consigne de la ligne."
       ],
       [
-        "J'informe les voyageurs simplement de la situation."
+        "J'informe les voyageurs simplement de la situation. À ceux qui me pressent, je réponds calmement que la sécurité passe avant l'horaire."
       ],
       [
         "Pour le voyageur qui veut descendre entre deux arrêts : je lui réponds poliment et j'applique les consignes de la ligne qu'on m'aura apprises. Sans consigne particulière, je m'arrête aux arrêts prévus."
@@ -291,6 +291,30 @@ export const SITUATIONS: Situation[] = [
     ],
     "keyPhrase": "Je prends le temps de l'écouter, je veille à sa sécurité et je demande conseil.",
     "trap": "supposer ce qu'elle veut ou la laisser partir seule si elle paraît en danger."
+  },
+  {
+    "id": "S13",
+    "star": false,
+    "title": "Un passager âgé tombe dans le bus",
+    "steps": [
+      [
+        "Je m'arrête en douceur dès que je peux le faire en sécurité, et je mets le bus à l'arrêt."
+      ],
+      [
+        "Je vais le voir et je lui demande s'il a mal. Je ne le relève pas de force, surtout s'il a mal ou s'il s'est cogné la tête."
+      ],
+      [
+        "Je préviens le PC. S'il a mal, s'il s'est cogné la tête ou s'il ne répond pas bien, j'appelle les secours (le 15 ou le 112)."
+      ],
+      [
+        "Je demande aux voyageurs de laisser de la place et je reste près de lui, avec calme."
+      ],
+      [
+        "Après, je préviens mon responsable et je fais le rapport demandé. Et je retiens : avant de démarrer, je laisse aux personnes âgées le temps de s'asseoir."
+      ]
+    ],
+    "keyPhrase": "Je m'arrête en sécurité, je m'occupe de lui sans le brusquer, et j'alerte.",
+    "trap": "repartir pour ne pas prendre de retard, ou le relever soi-même alors qu'il a mal."
   }
 ]
 export const REFLEX_STEPS: string[] = ['Sécuriser', 'Alerter', 'Informer', 'Appliquer la consigne', 'Rendre compte']
