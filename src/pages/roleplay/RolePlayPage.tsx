@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { ArrowRight, Check, ClipboardCheck, PartyPopper, RotateCcw, Users } from 'lucide-react'
 import { ROLE_PLAYS } from '../../content'
 import type { RolePlayLine } from '../../content/types'
 import { stopSpeaking } from '../../lib/speech/tts'
+import { reportActivityDone } from '../../lib/practice/activity'
 import { Card, Chip, ProgressBar } from '../../ui/primitives'
 import { SpeakButton } from '../../ui/SpeakButton'
 import { useProfile } from '../../ui/hooks'
@@ -88,6 +89,14 @@ function RolePlayInner({ id }: { id: string }) {
   const [stepIndex, setStepIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [observerChecked, setObserverChecked] = useState<Record<number, boolean>>({})
+  const done = stepIndex >= (rolePlay?.lines.length ?? 0)
+
+  // « Fin naturelle » du jeu de rôle : le dialogue interactif (à deux / solo) est allé jusqu'au
+  // bout. Le mode Lecture n'a pas de fin propre (la grille y est affichée dès l'arrivée), donc
+  // pas de report automatique dans ce mode.
+  useEffect(() => {
+    if (rolePlay && done) reportActivityDone({ kind: 'roleplay', rolePlayId: id })
+  }, [rolePlay, done, id])
 
   if (!rolePlay) {
     return (
@@ -103,8 +112,8 @@ function RolePlayInner({ id }: { id: string }) {
   const restart = () => { stopSpeaking(); setStepIndex(0); setRevealed(false); setObserverChecked({}) }
 
   const currentLine = rolePlay.lines[stepIndex]
-  const done = stepIndex >= rolePlay.lines.length
   const isCandidatHidden = Boolean(currentLine && currentLine.speaker === 'candidat' && !revealed)
+
   const advance = () => {
     stopSpeaking()
     if (isCandidatHidden) { setRevealed(true); return }

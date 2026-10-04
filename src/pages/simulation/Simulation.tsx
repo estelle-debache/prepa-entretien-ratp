@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { Link } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import { ArrowRight, Pause, Play, RotateCcw, Users } from 'lucide-react'
 import { getQuestion, RECRUITER_QUESTIONS, SITUATIONS } from '../../content'
 import type { Profile } from '../../content/types'
@@ -7,6 +7,7 @@ import { simulationIntro } from '../../content/practice/simulationIntro'
 import {
   buildSimulation, criterionForTheme, OFFICIAL_CRITERIA, summarizeSimulation, type OfficialCriterion, type SimulationStep,
 } from '../../lib/practice/simulation'
+import { reportActivityDone } from '../../lib/practice/activity'
 import { useStopwatch } from '../../lib/practice/timer'
 import { useRecorder } from '../../lib/speech/recorder'
 import { stopSpeaking } from '../../lib/speech/tts'
@@ -24,13 +25,19 @@ const SITUATION_TARGET: [number, number] = [30, 45]
 const RECRUTEUR_TARGET: [number, number] = [30, 60]
 
 export default function Simulation() {
+  const [searchParams] = useSearchParams()
   const [profile] = useProfile()
   const prenom = profile.prenom?.trim() || 'Yahia'
   const [statutQuestions] = useStatutQuestions()
   const [, setHistory] = useSimulationsHistory()
 
+  // Présélection depuis la barre de parcours (`?length=courte|complete`) : seulement la durée
+  // choisie à l'avance, l'écran de réglages (durée, seul/avec un ami) reste affiché.
+  const lengthParam = searchParams.get('length')
+  const preset: Length | null = lengthParam === 'courte' || lengthParam === 'complete' ? lengthParam : null
+
   const [stage, setStage] = useState<Stage>('setup')
-  const [length, setLength] = useState<Length>('courte')
+  const [length, setLength] = useState<Length>(preset ?? 'courte')
   const [mode, setMode] = useState<Mode>('seul')
   const [steps, setSteps] = useState<SimulationStep[]>([])
   const [index, setIndex] = useState(0)
@@ -53,6 +60,7 @@ export default function Simulation() {
     const averages: Record<string, number> = {}
     for (const criterion of OFFICIAL_CRITERIA) if (summary.averages[criterion] !== undefined) averages[criterion] = summary.averages[criterion] as number
     setHistory((prev) => [{ at: Date.now(), length, mode, averages, revisitCount: summary.revisit.length }, ...prev].slice(0, 5))
+    reportActivityDone({ kind: 'simulation' })
     setStage('summary')
   }
 

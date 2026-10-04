@@ -1,5 +1,5 @@
 export const STORAGE_PREFIX = 'prepa-ratp:v1:'
-export const STORE_KEYS = ['profil', 'statutQuestions', 'plan', 'checklist', 'reglages', 'quiz', 'situations', 'simulations', 'entrainement', 'ami'] as const
+export const STORE_KEYS = ['profil', 'statutQuestions', 'plan', 'parcours', 'unefois', 'checklist', 'reglages', 'quiz', 'situations', 'simulations', 'entrainement', 'ami'] as const
 export type StoreKey = typeof STORE_KEYS[number]
 
 export interface StorageLike {

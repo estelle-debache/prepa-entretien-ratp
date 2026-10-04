@@ -1,22 +1,25 @@
 import { useMemo } from 'react'
-import { Link } from 'react-router'
-import { ArrowRight, FastForward, Gamepad2, ListOrdered, Mic, Sparkles, Users, Zap, type LucideIcon } from 'lucide-react'
+import { Link, useNavigate } from 'react-router'
+import { ArrowRight, FastForward, Gamepad2, ListOrdered, Mic, PartyPopper, Sparkles, Users, Zap, type LucideIcon } from 'lucide-react'
 import { QUESTIONS } from '../../content'
-import { currentPlanDayId, daysUntil } from '../../lib/practice/dates'
 import { quickReviewOrder } from '../../lib/practice/selection'
-import { recommendedMode, type TrainingModeId } from '../../ui/trainingLogic'
-import { useReglages, useStatutQuestions } from '../../ui/hooks'
+import { isTourFinished, withParcours } from '../../lib/practice/parcours'
+import { useStatutQuestions } from '../../ui/hooks'
+import { useParcoursEngine } from '../../ui/useParcoursEngine'
+import { goToNextTour } from '../../ui/parcoursActions'
+import { STEP_ICONS } from '../../ui/stepIcons'
 import { frenchNbsp } from '../../ui/format'
 
-interface ModeCard { id: TrainingModeId; icon: LucideIcon; title: string; description: string; to: string }
+interface ModeCard { id: string; icon: LucideIcon; title: string; description: string; to: string }
 
 export default function Hub() {
-  const [reglages] = useReglages()
+  const navigate = useNavigate()
   const [statutQuestions] = useStatutQuestions()
+  const engine = useParcoursEngine()
+  const { state, step } = engine
+  const finished = isTourFinished(state)
 
   const recommendedId = useMemo(() => quickReviewOrder(QUESTIONS, statutQuestions)[0]?.id ?? 'Q1', [statutQuestions])
-  const planDayId = currentPlanDayId(daysUntil(reglages.interviewDate))
-  const recommendation = recommendedMode(planDayId)
 
   const modes: ModeCard[] = [
     { id: 'oral', icon: Mic, title: 'Oral seul', description: 'Réponds à voix haute, chronométré, puis auto-évalue-toi.', to: `/entrainement/oral/${recommendedId}` },
@@ -28,8 +31,7 @@ export default function Hub() {
     { id: 'revision', icon: FastForward, title: 'Révision rapide', description: 'Enchaîne les questions, sans chrono ni micro.', to: '/revision-rapide' },
   ]
 
-  const highlighted = modes.find((m) => m.id === recommendation.mode) ?? modes[0]
-  const rest = modes.filter((m) => m.id !== highlighted.id)
+  const StepIcon = step ? STEP_ICONS[step.kind] : Mic
 
   return (
     <div className="space-y-5">
@@ -38,23 +40,46 @@ export default function Hub() {
         <p className="text-[15px] text-ink-600">{frenchNbsp('Choisis un mode. Les sessions sont courtes : 5 à 15 minutes suffisent.')}</p>
       </header>
 
-      <Link
-        to={highlighted.to}
-        className="animate-pop flex items-center gap-3 rounded-3xl bg-navy-900 p-5 text-white shadow-[var(--shadow-pop)]"
-      >
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/15">
-          <highlighted.icon aria-hidden="true" className="size-6 text-mint-300" />
-        </span>
-        <span className="flex-1">
-          <span className="block text-xs font-bold uppercase tracking-wide text-mint-300">Recommandé aujourd'hui</span>
-          <span className="block text-[17px] font-bold">{highlighted.title}</span>
-          <span className="block text-sm text-white/80">{frenchNbsp(recommendation.reason)}</span>
-        </span>
-        <ArrowRight aria-hidden="true" className="size-5 shrink-0" />
+      {finished ? (
+        <button
+          type="button"
+          onClick={() => goToNextTour(engine, navigate)}
+          className="animate-pop flex w-full items-center gap-3 rounded-3xl bg-navy-900 p-5 text-left text-white shadow-[var(--shadow-pop)]"
+        >
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/15">
+            <PartyPopper aria-hidden="true" className="size-6 text-mint-300" />
+          </span>
+          <span className="flex-1">
+            <span className="block text-xs font-bold uppercase tracking-wide text-mint-300">Tour {state.tour} terminé</span>
+            <span className="block text-[17px] font-bold">Commencer le tour {state.tour + 1}</span>
+            <span className="block text-sm text-white/80">
+              {frenchNbsp('Les 5 questions ★ reviennent, avec de nouvelles mises en situation et un autre jeu de rôle.')}
+            </span>
+          </span>
+          <ArrowRight aria-hidden="true" className="size-5 shrink-0" />
+        </button>
+      ) : (
+        <Link
+          to={step ? withParcours(step.route) : '/parcours'}
+          className="animate-pop flex items-center gap-3 rounded-3xl bg-navy-900 p-5 text-white shadow-[var(--shadow-pop)]"
+        >
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/15">
+            <StepIcon aria-hidden="true" className="size-6 text-mint-300" />
+          </span>
+          <span className="flex-1">
+            <span className="block text-xs font-bold uppercase tracking-wide text-mint-300">Ta prochaine étape</span>
+            <span className="block text-[17px] font-bold">{step ? step.title : 'Ton parcours se prépare…'}</span>
+            <span className="block text-sm text-white/80">{step ? frenchNbsp(step.why) : ''}</span>
+          </span>
+          <ArrowRight aria-hidden="true" className="size-5 shrink-0" />
+        </Link>
+      )}
+      <Link to="/parcours" className="block text-center text-sm font-semibold text-navy-500 underline">
+        Voir tout le parcours
       </Link>
 
       <div className="space-y-2.5">
-        {rest.map(({ id, icon: Icon, title, description, to }, i) => (
+        {modes.map(({ id, icon: Icon, title, description, to }, i) => (
           <Link
             key={id}
             to={to}

@@ -7,8 +7,10 @@ import { useStopwatch } from '../../lib/practice/timer'
 import { useRecorder } from '../../lib/speech/recorder'
 import { stopSpeaking } from '../../lib/speech/tts'
 import { quickReviewOrder } from '../../lib/practice/selection'
+import { reportActivityDone } from '../../lib/practice/activity'
 import { computeOverallScore } from '../../ui/trainingLogic'
 import { useOralHistory, useProfile, useStatutQuestions } from '../../ui/hooks'
+import { useParcoursMode } from '../../ui/parcoursMode'
 import { RichText, QuotedRichText } from '../../ui/RichText'
 import { SpeakButton } from '../../ui/SpeakButton'
 import { ChronoDisplay } from '../../ui/ChronoDisplay'
@@ -27,6 +29,7 @@ export default function Oral() {
 
 function OralInner({ id }: { id: string }) {
   const navigate = useNavigate()
+  const parcoursMode = useParcoursMode()
   const [profile] = useProfile()
   const [statutQuestions, setStatutQuestions] = useStatutQuestions()
   const [, setOralHistory] = useOralHistory()
@@ -64,6 +67,7 @@ function OralInner({ id }: { id: string }) {
   const scored = scoreGrid(grid, checked)
   const reveal = () => {
     setOralHistory((prev) => ({ ...prev, [id]: { score: computeOverallScore(scored), at: Date.now() } }))
+    reportActivityDone({ kind: 'oral', questionId: id })
     setStage('reveal')
   }
 
@@ -149,7 +153,7 @@ function OralInner({ id }: { id: string }) {
             <Button variant="ghost" onClick={restart} className="flex-1">
               <RotateCcw aria-hidden="true" className="size-4" /> Recommencer
             </Button>
-            {nextId ? (
+            {nextId && !parcoursMode ? (
               <Button variant="primary" onClick={() => navigate(`/entrainement/oral/${nextId}`)} className="flex-1">
                 Question suivante <ArrowRight aria-hidden="true" className="size-4" />
               </Button>

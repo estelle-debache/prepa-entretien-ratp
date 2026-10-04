@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Check, RotateCcw, Undo2, X } from 'lucide-react'
 import { REFLEX_STEPS } from '../../content'
 import { checkOrder, REFLEX_NOTE, shuffledReflexes } from '../../lib/practice/reflex'
+import { reportActivityDone } from '../../lib/practice/activity'
 import { Button, Card } from '../../ui/primitives'
 import { frenchNbsp } from '../../ui/format'
 
@@ -21,7 +22,7 @@ export default function ReflexOrder() {
     setSelected((s) => s.slice(0, -1))
     setPool((p) => [...p, last])
   }
-  const verify = () => setResult(checkOrder(selected))
+  const verify = () => { setResult(checkOrder(selected)); reportActivityDone({ kind: 'reflex' }) }
   const restart = () => {
     setPool(shuffledReflexes())
     setSelected([])

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { daysUntil, currentPlanDayId, interviewCountdownLabel } from './dates'
+import { daysUntil, interviewCountdownLabel } from './dates'
 import { mulberry32, quickReviewOrder, shuffle } from './selection'
 import { buildGrid, scoreGrid } from './grid'
 import { formatMmSs, timeStatus } from './timer'
@@ -13,7 +13,6 @@ describe('practice pure helpers', () => {
   it('counts local calendar days and names the plan day', () => {
     expect(daysUntil('2026-10-07', new Date(2026, 9, 3, 23, 55))).toBe(4)
     expect(daysUntil('2026-10-03', new Date(2026, 9, 3, 0, 2))).toBe(0)
-    expect(currentPlanDayId(8)).toBe('J-4'); expect(currentPlanDayId(0)).toBe('J-0'); expect(currentPlanDayId(-1)).toBeNull()
     expect(interviewCountdownLabel(2)).toBe('Dans 2 jours'); expect(interviewCountdownLabel(1)).toBe('Demain')
     expect(interviewCountdownLabel(0)).toBe("Aujourd'hui"); expect(interviewCountdownLabel(-1)).toBe('Passé')
   })

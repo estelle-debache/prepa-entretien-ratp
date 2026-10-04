@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router'
 import { Shell } from './ui/Shell'
 import Home from './pages/Home'
+import Parcours from './pages/Parcours'
 import Fiche from './pages/Fiche'
 import Memo from './pages/Memo'
 import Donnees from './pages/Donnees'
@@ -25,6 +26,7 @@ function App() {
     <Shell>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/parcours" element={<Parcours />} />
 
         <Route path="/reviser" element={<ReviserList />} />
         <Route path="/reviser/:sectionId" element={<ReviserSection />} />

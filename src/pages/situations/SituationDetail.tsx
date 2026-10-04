@@ -5,6 +5,7 @@ import { SITUATIONS } from '../../content'
 import { QUIZ } from '../../content/quiz/quiz'
 import type { QuizItem } from '../../content/quiz/types'
 import { shuffleQuizOptions } from '../../lib/practice/quiz'
+import { reportActivityDone } from '../../lib/practice/activity'
 import { useRecorder } from '../../lib/speech/recorder'
 import { useStopwatch } from '../../lib/practice/timer'
 import { Button, Callout } from '../../ui/primitives'
@@ -12,6 +13,7 @@ import { RichText } from '../../ui/RichText'
 import { ChronoDisplay } from '../../ui/ChronoDisplay'
 import { RecorderPanel } from '../../ui/RecorderPanel'
 import { useProfile, useSituationsState } from '../../ui/hooks'
+import { useParcoursMode } from '../../ui/parcoursMode'
 import { frenchNbsp } from '../../ui/format'
 
 const SITUATION_TARGET: [number, number] = [30, 45]
@@ -24,6 +26,7 @@ export default function SituationDetail() {
 
 function SituationDetailInner({ id }: { id: string }) {
   const navigate = useNavigate()
+  const parcoursMode = useParcoursMode()
   const [profile] = useProfile()
   const [situationsState, setSituationsState] = useSituationsState()
   const [quizItems] = useState<QuizItem[]>(() => QUIZ.filter((q) => q.category === 'situation' && q.sourceId === id).map((q) => shuffleQuizOptions(q)))
@@ -53,6 +56,7 @@ function SituationDetailInner({ id }: { id: string }) {
   const reveal = () => {
     setRevealed(true)
     setSituationsState({ ...situationsState, [id]: { done: true, score: quizItems.length ? [correctCount, quizItems.length] : undefined } })
+    reportActivityDone({ kind: 'situation', situationId: id })
   }
 
   const startOral = async () => { setOralOpen(true); stopwatch.reset(); await rec.start(); stopwatch.start() }
@@ -118,7 +122,7 @@ function SituationDetailInner({ id }: { id: string }) {
             </p>
           </Callout>
 
-          {situation.rolePlayId ? (
+          {situation.rolePlayId && !parcoursMode ? (
             <Link
               to={`/jeux-de-role/${situation.rolePlayId}`}
               className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-mint-500 text-[15px] font-semibold text-white"
@@ -154,14 +158,16 @@ function SituationDetailInner({ id }: { id: string }) {
         </div>
       )}
 
-      <div className="flex items-center justify-between gap-2 border-t border-navy-100 pt-4">
-        <Button variant="ghost" disabled={!prev} onClick={() => prev && navigate(`/situations/${prev.id}`)}>
-          <ChevronLeft aria-hidden="true" className="size-4" /> Précédente
-        </Button>
-        <Button variant="ghost" disabled={!next} onClick={() => next && navigate(`/situations/${next.id}`)}>
-          Suivante <ChevronRight aria-hidden="true" className="size-4" />
-        </Button>
-      </div>
+      {!parcoursMode ? (
+        <div className="flex items-center justify-between gap-2 border-t border-navy-100 pt-4">
+          <Button variant="ghost" disabled={!prev} onClick={() => prev && navigate(`/situations/${prev.id}`)}>
+            <ChevronLeft aria-hidden="true" className="size-4" /> Précédente
+          </Button>
+          <Button variant="ghost" disabled={!next} onClick={() => next && navigate(`/situations/${next.id}`)}>
+            Suivante <ChevronRight aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+      ) : null}
     </div>
   )
 }

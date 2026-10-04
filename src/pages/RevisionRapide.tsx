@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, PartyPopper, RotateCcw } from 'lucide-react'
 import { QUESTIONS } from '../content'
 import { quickReviewOrder } from '../lib/practice/selection'
+import { reportActivityDone } from '../lib/practice/activity'
 import { Button, Card } from '../ui/primitives'
 import { QuotedRichText } from '../ui/RichText'
 import { useProfile, useStatutQuestions } from '../ui/hooks'
@@ -23,6 +24,12 @@ export default function RevisionRapide() {
   const batchLength = batchEnd - batchStart
   const hasMore = batchEnd < order.length
   const index = batchStart + posInBatch
+  const seriesDone = posInBatch >= batchLength
+
+  // Fin naturelle de la série : la carte « Série terminée » s'affiche.
+  useEffect(() => {
+    if (seriesDone) reportActivityDone({ kind: 'revision-rapide' })
+  }, [seriesDone])
 
   const restart = () => {
     setBatchStart(0)
@@ -36,7 +43,7 @@ export default function RevisionRapide() {
     setRevealed(false)
   }
 
-  if (posInBatch >= batchLength) {
+  if (seriesDone) {
     return (
       <div className="animate-fade flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
         <PartyPopper aria-hidden="true" className="size-12 text-mint-600" />

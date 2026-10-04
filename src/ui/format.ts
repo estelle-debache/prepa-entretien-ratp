@@ -23,31 +23,10 @@ export function daysUntil(targetIso: string, now: Date = new Date()): number {
 }
 
 const longDateFormatter = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
-const weekdayFormatter = new Intl.DateTimeFormat('fr-FR', { weekday: 'long' })
 
 /** « mercredi 7 octobre » */
 export function formatLongDateFR(iso: string): string {
   return longDateFormatter.format(parseISODate(iso))
-}
-
-function capitalize(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1)
-}
-
-/** Jour de la semaine (capitalisé) de la date d'entretien décalée de `offset` jours. */
-export function weekdayForOffset(interviewIso: string, offset: number): string {
-  const date = parseISODate(interviewIso)
-  date.setDate(date.getDate() + offset)
-  return capitalize(weekdayFormatter.format(date))
-}
-
-/**
- * Transforme un titre de jour du plan (« J-4 — Découvrir ») en titre lisible avec le vrai jour
- * de la semaine (« Samedi — Découvrir »), calculé depuis la date d'entretien.
- */
-export function planDayLabel(title: string, interviewIso: string, offset: number): string {
-  const theme = title.replace(/^J-\d+\s*[—-]\s*/, '')
-  return `${weekdayForOffset(interviewIso, offset)} — ${theme}`
 }
 
 /** Phrase de compte à rebours prête à afficher. */

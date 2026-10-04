@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usePersisted, type QuestionStatus, type Reglages } from '../lib/store'
 import { DEFAULT_INTERVIEW_DATE, type Profile } from '../content/types'
 import { PROFILE_FIELDS } from '../content/profileFields'
 import { isTtsSupported, primeVoices, speak, stopSpeaking } from '../lib/speech/tts'
+import { INITIAL_PARCOURS, normalizeParcours, type ParcoursState, type ResolveContext } from '../lib/practice/parcours'
+import type { OneOffId } from '../content/oneOff'
 
 /** Fiche personnelle persistée. */
 export function useProfile() {
@@ -17,8 +19,25 @@ export function useStatutQuestions() {
   return usePersisted<Record<string, QuestionStatus>>('statutQuestions', {})
 }
 
-export function usePlan() {
-  return usePersisted<Record<string, boolean>>('plan', {})
+export function useParcours(): [ParcoursState, (value: ParcoursState | ((previous: ParcoursState) => ParcoursState)) => void] {
+  const [stored, setStored] = usePersisted<ParcoursState>('parcours', INITIAL_PARCOURS)
+  const [statuses] = useStatutQuestions()
+  const [quiz] = useQuizState()
+  const value = useMemo(() => normalizeParcours(stored, { statuses, quizWrongCount: quiz.wrongIds.length }), [stored, statuses, quiz.wrongIds.length])
+  const setValue = useCallback((next: ParcoursState | ((previous: ParcoursState) => ParcoursState)) => {
+    setStored(previous => normalizeParcours(typeof next === 'function' ? next(normalizeParcours(previous)) : next))
+  }, [setStored])
+  return [value, setValue]
+}
+
+export function useUneFois() {
+  return usePersisted<Partial<Record<OneOffId, boolean>>>('unefois', {})
+}
+
+export function useParcoursContext(): ResolveContext {
+  const [statuses] = useStatutQuestions()
+  const [quiz] = useQuizState()
+  return useMemo(() => ({ statuses, quizWrongCount: quiz.wrongIds.length }), [statuses, quiz.wrongIds.length])
 }
 
 export function useChecklistState() {

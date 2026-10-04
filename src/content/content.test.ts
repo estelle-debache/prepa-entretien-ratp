@@ -10,9 +10,8 @@ import { ROLE_PLAYS } from './roleplays'
 import { RECRUITER_QUESTIONS } from './recruiter'
 import { MISTAKES } from './mistakes'
 import { CHECKLIST } from './checklist'
-import { PLAN } from './plan'
 
-const exportsToScan = { THEMES, SECTIONS, FACTS, EXTRAS, LOCAL_NETWORK, LEXICON, TOP_QUESTIONS, BANK_QUESTIONS, SITUATIONS, ROLE_PLAYS, RECRUITER_QUESTIONS, MISTAKES, CHECKLIST, PLAN }
+const exportsToScan = { THEMES, SECTIONS, FACTS, EXTRAS, LOCAL_NETWORK, LEXICON, TOP_QUESTIONS, BANK_QUESTIONS, SITUATIONS, ROLE_PLAYS, RECRUITER_QUESTIONS, MISTAKES, CHECKLIST }
 const values = (x: unknown): unknown[] => Array.isArray(x) ? x.flatMap(values) : x && typeof x === 'object' ? Object.values(x).flatMap(values) : [x]
 const serialized = JSON.stringify(exportsToScan)
 const links = values(exportsToScan).filter((x): x is string => typeof x === 'string').flatMap(s => [...s.matchAll(/\{link:([^}]+)\}/g)].map(m => m[1]))
@@ -31,7 +30,6 @@ describe('contenu éditorial', () => {
     expect(RECRUITER_QUESTIONS).toHaveLength(6)
     expect(MISTAKES).toHaveLength(11)
     expect(CHECKLIST).toHaveLength(4)
-    expect(PLAN).toHaveLength(5)
     expect(QUESTIONS).toHaveLength(45)
     expect(THEMES).toHaveLength(7)
     expect(SECTIONS).toHaveLength(9)
@@ -41,7 +39,7 @@ describe('contenu éditorial', () => {
     expect(TOP_QUESTIONS.filter(q => q.star).map(q => q.id)).toEqual(['Q1', 'Q2', 'Q7', 'Q9', 'Q13'])
     expect(SITUATIONS.filter(s => s.star).map(s => s.id)).toEqual(['S1', 'S2', 'S3'])
     expect(TOP_QUESTIONS.every(q => q.ideas.length === 3)).toBe(true)
-    const ids = [ ...QUESTIONS, ...SITUATIONS, ...ROLE_PLAYS, ...FACTS, ...EXTRAS, ...LEXICON, ...RECRUITER_QUESTIONS, ...MISTAKES, ...CHECKLIST.flatMap(g => g.items), ...PLAN.flatMap(d => d.tasks) ].map(x => x.id)
+    const ids = [ ...QUESTIONS, ...SITUATIONS, ...ROLE_PLAYS, ...FACTS, ...EXTRAS, ...LEXICON, ...RECRUITER_QUESTIONS, ...MISTAKES, ...CHECKLIST.flatMap(g => g.items) ].map(x => x.id)
     expect(new Set(ids).size).toBe(ids.length)
   })
 

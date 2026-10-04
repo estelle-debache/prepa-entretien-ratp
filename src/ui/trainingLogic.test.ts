@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { computeOverallScore, recommendedMode } from './trainingLogic'
+import { computeOverallScore } from './trainingLogic'
 
 describe('computeOverallScore', () => {
   it('donne 100 pour un sans-faute', () => {
@@ -18,22 +18,5 @@ describe('computeOverallScore', () => {
   })
   it('gère une grille sans items (division par zéro)', () => {
     expect(computeOverallScore({ ideas: [0, 0], avoidsHit: 0, general: [0, 0] })).toBe(0)
-  })
-})
-
-describe('recommendedMode', () => {
-  it('recommande l’oral seul en J-4 et J-3', () => {
-    expect(recommendedMode('J-4').mode).toBe('oral')
-    expect(recommendedMode('J-3').mode).toBe('oral')
-  })
-  it('recommande le mode ami en J-2', () => {
-    expect(recommendedMode('J-2').mode).toBe('ami')
-  })
-  it('recommande la révision rapide en J-1 et J-0', () => {
-    expect(recommendedMode('J-1').mode).toBe('revision')
-    expect(recommendedMode('J-0').mode).toBe('revision')
-  })
-  it('retombe sur l’oral par défaut (avant J-4 ou après J-0)', () => {
-    expect(recommendedMode(null).mode).toBe('oral')
   })
 })

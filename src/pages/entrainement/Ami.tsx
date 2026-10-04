@@ -6,8 +6,10 @@ import { friendModeInstructions } from '../../content/practice/simulationIntro'
 import { buildGrid, scoreGrid } from '../../lib/practice/grid'
 import { useStopwatch } from '../../lib/practice/timer'
 import { quickReviewOrder } from '../../lib/practice/selection'
+import { reportActivityDone } from '../../lib/practice/activity'
 import { computeOverallScore } from '../../ui/trainingLogic'
 import { useAmiHistory, useProfile, useStatutQuestions } from '../../ui/hooks'
+import { useParcoursMode } from '../../ui/parcoursMode'
 import { RichText, QuotedRichText } from '../../ui/RichText'
 import { ChronoDisplay } from '../../ui/ChronoDisplay'
 import { EvalGrid } from '../../ui/EvalGrid'
@@ -24,6 +26,7 @@ export default function Ami() {
 
 function AmiInner({ id }: { id: string }) {
   const navigate = useNavigate()
+  const parcoursMode = useParcoursMode()
   const [profile] = useProfile()
   const [statutQuestions, setStatutQuestions] = useStatutQuestions()
   const [, setAmiHistory] = useAmiHistory()
@@ -57,6 +60,7 @@ function AmiInner({ id }: { id: string }) {
   const seeBilan = () => {
     if (stopwatch.running) stopwatch.stop()
     setAmiHistory((prev) => ({ ...prev, [id]: { score: computeOverallScore(scored), at: Date.now() } }))
+    reportActivityDone({ kind: 'ami', questionId: id })
     setStage('reveal')
   }
   const setMastery = (value: 'maitrise' | 'a-revoir') => {
@@ -130,7 +134,7 @@ function AmiInner({ id }: { id: string }) {
             <Button variant="ghost" onClick={() => { stopwatch.reset(); setChecked({}); setShowExample(false); setStage('grade') }} className="flex-1">
               <RotateCcw aria-hidden="true" className="size-4" /> Recommencer
             </Button>
-            {nextId ? (
+            {nextId && !parcoursMode ? (
               <Button variant="primary" onClick={() => navigate(`/entrainement/ami/${nextId}`)} className="flex-1">
                 Suivante <ArrowRight aria-hidden="true" className="size-4" />
               </Button>

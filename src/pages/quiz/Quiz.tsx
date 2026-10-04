@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { Check, RotateCcw, Zap, X } from 'lucide-react'
 import { QUIZ } from '../../content/quiz/quiz'
 import type { QuizItem } from '../../content/quiz/types'
 import { pickQuiz, scoreQuiz, shuffleQuizOptions } from '../../lib/practice/quiz'
+import { reportActivityDone } from '../../lib/practice/activity'
 import { Button, Card, ProgressBar } from '../../ui/primitives'
 import { useQuizState } from '../../ui/hooks'
 import { frenchNbsp } from '../../ui/format'
@@ -14,9 +16,19 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 export default function Quiz() {
+  const [searchParams] = useSearchParams()
   const [quizState, setQuizState] = useQuizState()
-  const [stage, setStage] = useState<Stage>('setup')
-  const [items, setItems] = useState<QuizItem[]>([])
+
+  // Présélection depuis la barre de parcours (`?mode=serie|erreurs`) : démarrage direct, en un tap.
+  const modeParam = searchParams.get('mode')
+  const erreursPool = quizState.wrongIds.length > 0 ? QUIZ.filter((item) => quizState.wrongIds.includes(item.id)) : []
+  const preset: { pool: QuizItem[]; n: number } | null =
+    modeParam === 'erreurs' && erreursPool.length > 0 ? { pool: erreursPool, n: erreursPool.length }
+    : modeParam === 'serie' ? { pool: QUIZ, n: 10 }
+    : null
+
+  const [stage, setStage] = useState<Stage>(preset ? 'quiz' : 'setup')
+  const [items, setItems] = useState<QuizItem[]>(() => (preset ? pickQuiz(preset.pool, preset.n).map((item) => shuffleQuizOptions(item)) : []))
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, number>>({})
 
@@ -42,6 +54,7 @@ export default function Quiz() {
       const result = scoreQuiz(items, answers)
       const wrongIds = items.filter((item) => answers[item.id] !== item.answer).map((item) => item.id)
       setQuizState({ wrongIds, lastScore: { correct: result.correct, total: result.total }, lastAt: Date.now() })
+      reportActivityDone({ kind: 'quiz' })
       setStage('result')
     } else {
       setIndex((i) => i + 1)

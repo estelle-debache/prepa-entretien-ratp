@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { capitalizeFirst, frenchNbsp, planDayLabel } from './format'
+import { capitalizeFirst, frenchNbsp } from './format'
 
 describe('frenchNbsp', () => {
   it('insère une espace insécable après « et avant »', () => {
@@ -28,13 +28,5 @@ describe('capitalizeFirst', () => {
   })
   it('laisse une chaîne vide inchangée', () => {
     expect(capitalizeFirst('')).toBe('')
-  })
-})
-
-describe('planDayLabel', () => {
-  it('remplace le préfixe J-N par le vrai jour de semaine', () => {
-    // 2026-10-07 est un mercredi ; J-4 = samedi 3 octobre 2026
-    expect(planDayLabel('J-4 — Découvrir', '2026-10-07', -4)).toBe('Samedi — Découvrir')
-    expect(planDayLabel('J-0 — Le jour J', '2026-10-07', 0)).toBe('Mercredi — Le jour J')
   })
 })

@@ -6,7 +6,7 @@ export { STORAGE_PREFIX } from './storage'
 
 const defaults: Partial<Record<StoreKey, unknown>> = {
   profil: { prenom: 'Yahia' } satisfies Profile,
-  statutQuestions: {}, plan: {}, checklist: {},
+  statutQuestions: {}, checklist: {},
   reglages: { interviewDate: DEFAULT_INTERVIEW_DATE, tts: true } satisfies Reglages,
 }
 const listeners = new Map<StoreKey, Set<() => void>>()
