@@ -156,11 +156,11 @@ export const TOP_QUESTIONS: TopQuestion[] = [
         "Conduire en sécurité et accueillir les voyageurs."
       ],
       [
-        "Informer le PC et rendre compte d'un problème."
+        "Informer le PC en cas de problème, et en fin de service : ramener le bus, le vérifier et signaler les anomalies."
       ]
     ],
     "example": [
-      "Je commence au centre bus. Je prends connaissance de ma feuille de route et je contrôle le véhicule selon ce qu'on m'aura appris. Ensuite, j'accueille les voyageurs, je conduis en respectant le code de la route et je les renseigne si besoin. Il faut aussi rester attentif aux embouteillages, aux retards et aux éventuels problèmes mécaniques. En cas de souci, je contacte le PC par radio et je suis la consigne. Le métier ne consiste donc pas seulement à conduire : il faut aussi veiller à la sécurité, garder son calme et transmettre les bonnes informations. Les horaires peuvent être le matin, l'après-midi, le soir ou le week-end."
+      "Je commence au centre bus. Je prends connaissance de ma feuille de route et je contrôle le véhicule selon ce qu'on m'aura appris. Ensuite, j'accueille les voyageurs, je conduis en respectant le code de la route et je les renseigne si besoin. Il faut aussi rester attentif aux embouteillages, aux retards et aux éventuels problèmes mécaniques. En cas de souci, je contacte le PC par radio et je suis la consigne. Entre deux trajets, je fais ma pause au terminus, et je peux être relevé en ligne par un collègue. En fin de service, je ramène le bus au centre bus, je fais le tour du véhicule pour vérifier qu'il n'y a ni dégât ni objet oublié, je signale les anomalies et les incidents de la journée, et je préviens mon responsable si besoin. Le métier ne consiste donc pas seulement à conduire : il faut aussi veiller à la sécurité, garder son calme et transmettre les bonnes informations. Les horaires peuvent être le matin, l'après-midi, le soir ou le week-end."
     ],
     "avoid": [
       "réduire le métier à « conduire toute la journée »."
