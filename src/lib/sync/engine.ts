@@ -220,10 +220,13 @@ export function createSyncEngine(deps: SyncEngineDependencies) {
   return { start, enable, join, disable, deleteOnline, syncNow, getCode, useStatus, subscribe, snapshot }
 }
 
+// « visibilitychange » est émis sur `document` : on l'y écoute directement (ne pas dépendre de
+// la remontée jusqu'à `window`). « pagehide » et « online » sont émis sur `window`.
+const eventHost = (type: string): EventTarget => (type === 'visibilitychange' ? document : window)
 const browserTarget = typeof window !== 'undefined' && typeof document !== 'undefined' ? {
   get visibilityState() { return document.visibilityState },
-  addEventListener: window.addEventListener.bind(window),
-  removeEventListener: window.removeEventListener.bind(window),
+  addEventListener: (type: string, listener: () => void) => eventHost(type).addEventListener(type, listener),
+  removeEventListener: (type: string, listener: () => void) => eventHost(type).removeEventListener(type, listener),
 } : undefined
 const engine = createSyncEngine({
   configured: isSyncConfigured,
